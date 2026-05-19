@@ -7,6 +7,9 @@ venv/
 data/ohlcv_cache/
 data/backtest_results.json
 data/earnings_calendar.json
+data/insider_filings.json
+data/sec_company_tickers.json
+_smoke_*.py
 *.log
 .vscode/
 .idea/
