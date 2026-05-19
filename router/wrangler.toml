@@ -1,0 +1,29 @@
+name = "takeoff-trigger-router"
+main = "src/index.ts"
+compatibility_date = "2026-05-01"
+workers_dev = true
+
+# Secrets (set via: wrangler secret put BOARD_MARKET_HMAC_SECRET)
+# Do NOT put actual secrets in this file.
+#
+# Required:
+#   BOARD_MARKET_HMAC_SECRET
+#   RESEND_API_KEY
+#   USER_EMAIL
+#
+# Optional (for additional products):
+#   COMMAND_CENTER_HMAC_SECRET
+#   MIDNIGHT_HMAC_SECRET
+#   POOF_E_GONE_HMAC_SECRET
+#
+# Optional (for push):
+#   VAPID_PRIVATE_KEY
+#   VAPID_PUBLIC_KEY
+#   USER_PUSH_SUBSCRIPTION
+#
+# Optional (for Quiet Day toggle):
+#   QUIET_DAY_FLAG_URL  — public-read endpoint, returns {"quiet_day": bool}
+
+[observability]
+enabled = true
+head_sampling_rate = 0.1

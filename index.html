@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Board · Markets</title>
+<meta name="description" content="A trading discipline framework. Atomic-age optimism meets cosmic precision.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  /* ── Porsche foundation — restrained charcoal + champagne ── */
+  --bg-deep:        #0c0e12;
+  --bg-base:        #131620;
+  --bg-elevated:    #1a1e2a;
+  --bg-card:        #161a25;
+  --bg-card-hi:     #1d2230;
+
+  /* ── Silver Surfer — chrome gradients ── */
+  --chrome-1:       #e8eaf0;
+  --chrome-2:       #b8bcc8;
+  --chrome-3:       #7a7e8a;
+  --chrome-dark:    #3a3e4a;
+
+  /* ── Jetsons — atomic-age accent palette ── */
+  --atomic-aqua:    #7fd4d4;   /* the iconic Jetsons turquoise */
+  --atomic-coral:   #ff8a6b;   /* warm retrofuture orange */
+  --atomic-cream:   #f0e6d2;   /* off-white, sand */
+  --atomic-rose:    #f4a8c0;
+  --cosmic-purple:  #8b6ce0;
+  --cosmic-deep:    #2d1f5c;
+
+  /* ── Semantic tokens ── */
+  --text-primary:   #ecedf2;
+  --text-secondary: #a8acba;
+  --text-tertiary:  #6c7080;
+  --text-faded:     #454956;
+
+  --tier-lock:  var(--atomic-coral);
+  --tier-live:  var(--atomic-aqua);
+  --tier-bench: var(--chrome-3);
+
+  --gain:  #a8e6a8;
+  --loss:  #f0a0a0;
+
+  --border-hair:    rgba(232, 234, 240, 0.08);
+  --border-soft:    rgba(232, 234, 240, 0.14);
+  --border-bright:  rgba(232, 234, 240, 0.32);
+
+  --accent:        var(--atomic-aqua);
+  --accent-warm:   var(--atomic-coral);
+
+  --shadow-orbit:  0 0 60px rgba(127, 212, 212, 0.12);
+  --shadow-warm:   0 0 80px rgba(255, 138, 107, 0.08);
+
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-mono:    'Inter Tight', system-ui, sans-serif;
+  --font-body:    'Inter Tight', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+*::selection { background: var(--atomic-aqua); color: var(--bg-deep); }
+
+html { scroll-behavior: smooth; }
+html, body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────
+   COSMIC BACKDROP — Silver Surfer environment
+   ───────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 12% 8%, rgba(127, 212, 212, 0.10) 0%, transparent 45%),
+    radial-gradient(ellipse at 88% 22%, rgba(255, 138, 107, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(139, 108, 224, 0.08) 0%, transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(240, 230, 210, 0.03) 0%, transparent 40%);
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Star field — subtle, distant */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 80px 80px, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1px 1px at 130px 50px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 200px 100px, rgba(255,255,255,0.2), transparent),
+    radial-gradient(1.5px 1.5px at 280px 40px, rgba(127, 212, 212, 0.6), transparent),
+    radial-gradient(1px 1px at 350px 110px, rgba(255,255,255,0.3), transparent);
+  background-size: 400px 200px;
+  background-repeat: repeat;
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+  animation: drift 240s linear infinite;
+}
+@keyframes drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-400px, -200px, 0); }
+}
+
+/* Orbital ring — large atomic-age decorative element */
+.orbital {
+  position: fixed;
+  top: 50%;
+  right: -200px;
+  width: 800px;
+  height: 800px;
+  border: 1px solid var(--border-hair);
+  border-radius: 50%;
+  transform: translate(0, -50%) rotate(-15deg);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
+}
+.orbital::before, .orbital::after {
+  content: '';
+  position: absolute;
+  inset: 60px;
+  border: 1px solid var(--border-hair);
+  border-radius: 50%;
+}
+.orbital::after {
+  inset: 140px;
+  border-color: rgba(127, 212, 212, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  position: relative;
+}
+
+/* ─────────────────────────────────────────
+   HEADER — Porsche restraint
+   ───────────────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 1.5rem 0;
+  background: rgba(12, 14, 18, 0.78);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid var(--border-hair);
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+/* Atomic-age brand mark — Jetsons curve + Surfer chrome */
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  position: relative;
+  flex-shrink: 0;
+}
+.brand-mark svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(127, 212, 212, 0.4));
+}
+
+.brand-text {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+  background: linear-gradient(180deg, var(--chrome-1) 0%, var(--chrome-2) 50%, var(--chrome-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.25em;
+  color: var(--atomic-aqua);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.header-meta {
+  display: flex;
+  gap: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.header-meta .pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--atomic-coral);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  box-shadow: 0 0 12px var(--atomic-coral);
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ─────────────────────────────────────────
+   HERO — Jetsons optimism, Porsche space
+   ───────────────────────────────────────── */
+.hero {
+  padding: 7rem 0 6rem;
+  position: relative;
+}
+
+/* Decorative orbital arc behind hero */
+.hero::before {
+  content: '';
+  position: absolute;
+  left: -300px;
+  top: 60%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hair);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  left: -240px;
+  top: 65%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  border: 1px dashed rgba(127, 212, 212, 0.15);
+  pointer-events: none;
+  animation: spin 200s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--atomic-aqua);
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem 0.5rem 0;
+}
+.eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--atomic-aqua));
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 7.5vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  max-width: 1000px;
+}
+h1 .chrome {
+  background: linear-gradient(180deg, var(--chrome-1) 0%, var(--chrome-2) 40%, var(--chrome-3) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+h1 .accent-word {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--atomic-coral);
+  position: relative;
+}
+
+.hero-lede {
+  font-size: 1.1875rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: 100px;
+  transition: all 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '→';
+  font-family: var(--font-body);
+  font-size: 1.1em;
+  transition: transform 240ms ease;
+}
+.btn:hover {
+  border-color: var(--atomic-aqua);
+  color: var(--bg-deep);
+  background: var(--atomic-aqua);
+  box-shadow: var(--shadow-orbit);
+}
+.btn:hover::after { transform: translateX(4px); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--atomic-coral) 0%, #ff7050 100%);
+  border-color: transparent;
+  color: var(--bg-deep);
+  box-shadow: var(--shadow-warm);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ff7050 0%, var(--atomic-coral) 100%);
+  color: var(--bg-deep);
+  box-shadow: 0 0 40px rgba(255, 138, 107, 0.4);
+}
+
+/* ─────────────────────────────────────────
+   SECTIONS
+   ───────────────────────────────────────── */
+section {
+  padding: 5rem 0;
+  position: relative;
+}
+section + section {
+  border-top: 1px solid var(--border-hair);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-hair);
+  padding-bottom: 1.5rem;
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--atomic-coral);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  max-width: 720px;
+}
+.section-head h2 em {
+  font-style: italic;
+  color: var(--atomic-aqua);
+  font-weight: 400;
+}
+
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────
+   STATUS BOARD — Porsche restraint, Surfer surfaces
+   ───────────────────────────────────────── */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+.status-card {
+  background:
+    linear-gradient(180deg, rgba(232, 234, 240, 0.02) 0%, transparent 50%),
+    var(--bg-card);
+  border: 1px solid var(--border-hair);
+  border-radius: 16px;
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 360ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--chrome-2), transparent);
+  opacity: 0.4;
+}
+.status-card:hover {
+  border-color: var(--border-bright);
+  transform: translateY(-2px);
+  background:
+    linear-gradient(180deg, rgba(232, 234, 240, 0.03) 0%, transparent 50%),
+    var(--bg-card-hi);
+}
+
+.status-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.phase-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 100px;
+  border: 1px solid;
+  text-transform: uppercase;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.status-pill.scaffolded { color: var(--atomic-aqua); border-color: rgba(127, 212, 212, 0.4); background: rgba(127, 212, 212, 0.06); }
+.status-pill.pending    { color: var(--atomic-coral); border-color: rgba(255, 138, 107, 0.4); background: rgba(255, 138, 107, 0.06); }
+.status-pill.todo       { color: var(--chrome-3); border-color: rgba(184, 188, 200, 0.2); }
+.status-pill.gated      { color: var(--text-faded); border-color: var(--text-faded); }
+
+.status-card h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.625rem;
+  line-height: 1.15;
+}
+
+.status-card p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+.progress-track {
+  height: 2px;
+  background: var(--bg-elevated);
+  margin-top: 1.5rem;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+.progress-fill.warm { background: linear-gradient(90deg, var(--atomic-coral), #ff7050); box-shadow: 0 0 12px rgba(255, 138, 107, 0.5); }
+.progress-fill.cool { background: linear-gradient(90deg, var(--atomic-aqua), #5fbabd); box-shadow: 0 0 12px rgba(127, 212, 212, 0.5); }
+.progress-fill.flat { background: var(--chrome-dark); }
+
+/* ─────────────────────────────────────────
+   TIER VOCAB — capsule cards, atomic shapes
+   ───────────────────────────────────────── */
+.vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.vocab-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hair);
+  border-radius: 24px;
+  padding: 2.25rem 1.75rem 1.75rem;
+  overflow: hidden;
+  transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.vocab-card:hover { transform: translateY(-3px); }
+
+/* Atomic-age orbital decoration */
+.vocab-card::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  opacity: 0.18;
+  filter: blur(1px);
+}
+.vocab-card.lock::before  { background: radial-gradient(circle, var(--atomic-coral), transparent 70%); }
+.vocab-card.live::before  { background: radial-gradient(circle, var(--atomic-aqua), transparent 70%); }
+.vocab-card.bench::before { background: radial-gradient(circle, var(--chrome-3), transparent 70%); }
+
+.vocab-card-inner { position: relative; z-index: 1; }
+
+.tier-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  border: 1px solid;
+}
+.vocab-card.lock  .tier-glyph { border-color: rgba(255, 138, 107, 0.4); background: rgba(255, 138, 107, 0.08); }
+.vocab-card.live  .tier-glyph { border-color: rgba(127, 212, 212, 0.4); background: rgba(127, 212, 212, 0.08); }
+.vocab-card.bench .tier-glyph { border-color: rgba(184, 188, 200, 0.2); background: rgba(184, 188, 200, 0.04); }
+
+.tier-name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.tier-score {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 3.75rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.25rem;
+}
+.vocab-card.lock  .tier-score { color: var(--atomic-coral); }
+.vocab-card.live  .tier-score { color: var(--atomic-aqua); }
+.vocab-card.bench .tier-score { color: var(--chrome-3); }
+
+.tier-desc {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* ─────────────────────────────────────────
+   COMPOSITE — chrome data viz
+   ───────────────────────────────────────── */
+.factors {
+  background:
+    linear-gradient(180deg, rgba(127, 212, 212, 0.03) 0%, transparent 30%),
+    var(--bg-card);
+  border: 1px solid var(--border-hair);
+  border-radius: 20px;
+  padding: 2.5rem 2.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.factors::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--atomic-aqua), transparent 50%);
+  opacity: 0.15;
+}
+
+.factor-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 80px;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.125rem 0;
+  border-bottom: 1px solid var(--border-hair);
+}
+.factor-row:last-child { border-bottom: none; }
+
+.factor-name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.factor-track {
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.factor-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  transition: width 1400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.factor-fill.lock   { background: linear-gradient(90deg, var(--atomic-coral), #ff7050); box-shadow: 0 0 8px rgba(255, 138, 107, 0.4); }
+.factor-fill.live   { background: linear-gradient(90deg, var(--atomic-aqua), #5fbabd); box-shadow: 0 0 8px rgba(127, 212, 212, 0.4); }
+.factor-fill.muted  { background: var(--chrome-dark); }
+
+.factor-value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.factor-value .unit {
+  color: var(--text-faded);
+  font-weight: 400;
+  font-size: 0.7em;
+  font-style: italic;
+}
+
+.composite-row {
+  padding-top: 1.75rem !important;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--border-soft) !important;
+}
+.composite-row .factor-name {
+  color: var(--text-primary);
+  letter-spacing: 0.25em;
+}
+.composite-row .factor-value {
+  color: var(--atomic-coral);
+  font-size: 1.625rem;
+}
+
+/* ─────────────────────────────────────────
+   CRITERIA — Porsche spec sheet
+   ───────────────────────────────────────── */
+.criteria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--border-hair);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-hair);
+}
+.criterion {
+  background: var(--bg-card);
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  transition: background 240ms ease;
+}
+.criterion:hover { background: var(--bg-card-hi); }
+
+.criterion-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.criterion-value {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.5rem;
+  letter-spacing: -0.03em;
+  color: var(--atomic-aqua);
+  line-height: 1;
+}
+.criterion-desc {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────
+   DISCIPLINE — pull quote + atomic list
+   ───────────────────────────────────────── */
+.discipline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 880px) { .discipline { grid-template-columns: 1fr; gap: 3rem; } }
+
+.pull-quote {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.2vw, 2.125rem);
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 2rem;
+}
+.pull-quote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  bottom: 0.4em;
+  width: 2px;
+  background: linear-gradient(180deg, var(--atomic-coral), var(--atomic-aqua));
+  border-radius: 2px;
+}
+.pull-quote em {
+  color: var(--atomic-aqua);
+  font-style: normal;
+  font-feature-settings: 'ss01';
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.rule {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-hair);
+}
+.rule:last-child { border-bottom: none; padding-bottom: 0; }
+
+.rule-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--atomic-aqua);
+  padding-top: 0.25rem;
+}
+
+.rule-text {
+  font-size: 0.9375rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.rule-text strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────
+   REPOSITORY — chrome cards
+   ───────────────────────────────────────── */
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+.link-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hair);
+  border-radius: 16px;
+  padding: 1.75rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.link-card::after {
+  content: '↗';
+  position: absolute;
+  top: 1.5rem;
+  right: 1.75rem;
+  font-size: 1.25rem;
+  color: var(--text-faded);
+  transition: all 320ms ease;
+}
+.link-card:hover {
+  border-color: var(--atomic-aqua);
+  transform: translateY(-3px);
+  background: var(--bg-card-hi);
+}
+.link-card:hover::after {
+  color: var(--atomic-aqua);
+  transform: translate(2px, -2px);
+}
+
+.link-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.link-name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5rem;
+  line-height: 1.15;
+}
+.link-desc {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 90%;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER
+   ───────────────────────────────────────── */
+footer {
+  padding: 4rem 0 5rem;
+  border-top: 1px solid var(--border-hair);
+  margin-top: 4rem;
+  background: linear-gradient(180deg, transparent, rgba(12, 14, 18, 0.6));
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+@media (max-width: 720px) { .footer-grid { grid-template-columns: 1fr; gap: 2rem; } }
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--chrome-2);
+  margin-bottom: 0.625rem;
+}
+.footer-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--text-faded);
+  text-transform: uppercase;
+}
+.footer-disclaim {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--text-faded);
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+/* ─────────────────────────────────────────
+   ANIMATIONS — fade-in on scroll
+   ───────────────────────────────────────── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1), transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────
+   MOBILE
+   ───────────────────────────────────────── */
+@media (max-width: 720px) {
+  .container { padding: 0 1.5rem; }
+  .header-meta { display: none; }
+  .hero { padding: 4rem 0 3rem; }
+  section { padding: 3.5rem 0; }
+  .orbital, .hero::before, .hero::after { display: none; }
+  .factor-row { grid-template-columns: 1fr; gap: 0.625rem; }
+  .factor-value { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="orbital" aria-hidden="true"></div>
+
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="chromeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e8eaf0"/>
+                <stop offset="50%" stop-color="#b8bcc8"/>
+                <stop offset="100%" stop-color="#7a7e8a"/>
+              </linearGradient>
+              <linearGradient id="aquaGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7fd4d4"/>
+                <stop offset="100%" stop-color="#5fbabd"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="20" cy="20" rx="18" ry="6" stroke="url(#chromeGrad)" stroke-width="1" transform="rotate(-20 20 20)" opacity="0.5"/>
+            <circle cx="20" cy="20" r="11" fill="url(#chromeGrad)" opacity="0.18"/>
+            <circle cx="20" cy="20" r="6" fill="url(#aquaGrad)"/>
+            <circle cx="20" cy="20" r="2" fill="#0c0e12"/>
+          </svg>
+        </span>
+        <span>
+          <span class="brand-text">The Board</span>
+          <span class="brand-tag">Markets · Takeoff LLC</span>
+        </span>
+      </a>
+      <div class="header-meta">
+        <span><span class="pulse"></span>Pre-Validation</span>
+        <span id="dateline">— · —</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1><span class="chrome">A discipline system</span><br>for <span class="accent-word">a noisy market.</span></h1>
+    <p class="hero-lede">
+      A sports-parlay framework, retuned for stocks. Forty-five tickers scored
+      daily on a hundred-point composite. Tiered, gated, and stopped — exactly
+      where the gut wants to override. Backtest gates everything. Capital
+      deploys after, never before.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://github.com/Wordups/the-board-market" target="_blank" rel="noopener">View the repo</a>
+      <a class="btn" href="#status">Build status</a>
+      <a class="btn" href="#vocab">How it works</a>
+    </div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">01 · System</span>
+        <h2>Seven phases, <em>gated by results</em></h2>
+      </div>
+      <span class="section-tag">no phase skipped</span>
+    </div>
+    <div class="status-grid">
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 1</span>
+          <span class="status-pill scaffolded">Scaffolded</span>
+        </div>
+        <h3>Backtest engine</h3>
+        <p>Five-year simulation across forty-five tickers. Realistic slippage. Pre-committed pass/fail criteria. Awaiting first run.</p>
+        <div class="progress-track"><div class="progress-fill cool" data-w="90"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 2</span>
+          <span class="status-pill todo">To Build</span>
+        </div>
+        <h3>Catalyst layer</h3>
+        <p>Earnings calendar, Form 4 insider data, congressional cluster detection. Gives the Smart Money factor real signal.</p>
+        <div class="progress-track"><div class="progress-fill flat" data-w="0"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 2.6</span>
+          <span class="status-pill pending">Deploy Pending</span>
+        </div>
+        <h3>Trigger router</h3>
+        <p>Stateless Cloudflare Worker. The notification spine for every Takeoff product. Holds no data, ever.</p>
+        <div class="progress-track"><div class="progress-fill warm" data-w="75"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 3</span>
+          <span class="status-pill scaffolded">Scaffolded</span>
+        </div>
+        <h3>Profile + ledger</h3>
+        <p>SQLite schema, auth, play tracking, performance metrics. Backend live. Frontend dashboard in queue.</p>
+        <div class="progress-track"><div class="progress-fill cool" data-w="60"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 4</span>
+          <span class="status-pill todo">To Build</span>
+        </div>
+        <h3>Automated cadence</h3>
+        <p>Pre-market scoring at 8:00 AM ET. Board freeze at 9:30. EOD resolve at 4:15. Daily, on rails.</p>
+        <div class="progress-track"><div class="progress-fill flat" data-w="0"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 5</span>
+          <span class="status-pill scaffolded">Scaffolded</span>
+        </div>
+        <h3>Broker integration</h3>
+        <p>Schwab Trader API (read only). Plaid for Roth balance. Manual CSV for Fidelity. Zero order placement.</p>
+        <div class="progress-track"><div class="progress-fill cool" data-w="40"></div></div>
+      </div>
+      <div class="status-card fade-in">
+        <div class="status-card-head">
+          <span class="phase-num">Phase 6</span>
+          <span class="status-pill gated">Gated</span>
+        </div>
+        <h3>Options + orders</h3>
+        <p>Hard gated on Phase 1 pass plus eight weeks of clean Phase 4 operation. Not until then. Not before.</p>
+        <div class="progress-track"><div class="progress-fill flat" data-w="0"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vocab">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">02 · Vocabulary</span>
+        <h2>How plays <em>earn their place</em></h2>
+      </div>
+      <span class="section-tag">three tiers · zero exceptions</span>
+    </div>
+    <div class="vocab-grid">
+      <div class="vocab-card lock fade-in">
+        <div class="vocab-card-inner">
+          <span class="tier-glyph">🔒</span>
+          <div class="tier-name">Lock</div>
+          <div class="tier-score">85+</div>
+          <div class="tier-desc">High conviction. Stacked signals across technical, catalyst, relative strength, macro. One concurrent maximum.</div>
+        </div>
+      </div>
+      <div class="vocab-card live fade-in">
+        <div class="vocab-card-inner">
+          <span class="tier-glyph">📊</span>
+          <div class="tier-name">Live</div>
+          <div class="tier-score">71–84</div>
+          <div class="tier-desc">Qualified setup. Strong factor profile, not bulletproof. Half position. Two concurrent maximum.</div>
+        </div>
+      </div>
+      <div class="vocab-card bench fade-in">
+        <div class="vocab-card-inner">
+          <span class="tier-glyph">🪑</span>
+          <div class="tier-name">Bench</div>
+          <div class="tier-score">&lt; 71</div>
+          <div class="tier-desc">Watchlist only. Zero capital. Monitored for promotion. Most candidates live here most of the time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">03 · Composite</span>
+        <h2>The hundred-point <em>score</em></h2>
+      </div>
+      <span class="section-tag">illustrative · nvda example</span>
+    </div>
+    <div class="factors fade-in">
+      <div class="factor-row">
+        <span class="factor-name">Technical</span>
+        <div class="factor-track"><div class="factor-fill lock" data-target="90"></div></div>
+        <span class="factor-value">18<span class="unit"> / 20</span></span>
+      </div>
+      <div class="factor-row">
+        <span class="factor-name">Catalyst</span>
+        <div class="factor-track"><div class="factor-fill lock" data-target="85"></div></div>
+        <span class="factor-value">17<span class="unit"> / 20</span></span>
+      </div>
+      <div class="factor-row">
+        <span class="factor-name">Relative Strength</span>
+        <div class="factor-track"><div class="factor-fill live" data-target="87"></div></div>
+        <span class="factor-value">13<span class="unit"> / 15</span></span>
+      </div>
+      <div class="factor-row">
+        <span class="factor-name">Smart Money</span>
+        <div class="factor-track"><div class="factor-fill muted" data-target="47"></div></div>
+        <span class="factor-value">7<span class="unit"> / 15</span></span>
+      </div>
+      <div class="factor-row">
+        <span class="factor-name">Macro</span>
+        <div class="factor-track"><div class="factor-fill live" data-target="93"></div></div>
+        <span class="factor-value">14<span class="unit"> / 15</span></span>
+      </div>
+      <div class="factor-row">
+        <span class="factor-name">Sentiment</span>
+        <div class="factor-track"><div class="factor-fill lock" data-target="100"></div></div>
+        <span class="factor-value">15<span class="unit"> / 15</span></span>
+      </div>
+      <div class="factor-row composite-row">
+        <span class="factor-name">Composite</span>
+        <div class="factor-track"><div class="factor-fill lock" data-target="84"></div></div>
+        <span class="factor-value">84<span class="unit"> / 100</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">04 · Criteria</span>
+        <h2>The goalposts <em>cannot move</em></h2>
+      </div>
+      <span class="section-tag">pre-committed · five tests</span>
+    </div>
+    <div class="criteria-grid">
+      <div class="criterion">
+        <span class="criterion-label">Lock Win Rate</span>
+        <span class="criterion-value">≥ 65%</span>
+        <span class="criterion-desc">High-conviction plays must clear this bar.</span>
+      </div>
+      <div class="criterion">
+        <span class="criterion-label">Live Win Rate</span>
+        <span class="criterion-value">≥ 55%</span>
+        <span class="criterion-desc">Qualified plays. Lower bar, smaller positions.</span>
+      </div>
+      <div class="criterion">
+        <span class="criterion-label">Average R</span>
+        <span class="criterion-value">≥ 1.8</span>
+        <span class="criterion-desc">Net of realistic slippage.</span>
+      </div>
+      <div class="criterion">
+        <span class="criterion-label">Max Drawdown</span>
+        <span class="criterion-value">≤ 25%</span>
+        <span class="criterion-desc">Across the five-year simulation.</span>
+      </div>
+      <div class="criterion">
+        <span class="criterion-label">Positive Years</span>
+        <span class="criterion-value">4 / 5</span>
+        <span class="criterion-desc">Including 2022 bear regime.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">05 · Discipline</span>
+        <h2>Why the <em>rules exist</em></h2>
+      </div>
+      <span class="section-tag">eight non-negotiables</span>
+    </div>
+    <div class="discipline">
+      <div class="pull-quote fade-in">
+        Markets are noisier than props. Win-rate targets are lower. R/R targets are higher. The system enforces <em>discipline</em>. Discipline does not guarantee profit.
+      </div>
+      <div class="rules">
+        <div class="rule"><span class="rule-num">01</span><div class="rule-text"><strong>Score 71+ required.</strong> No exceptions for gut calls.</div></div>
+        <div class="rule"><span class="rule-num">02</span><div class="rule-text"><strong>9:30 AM ET freeze gate.</strong> Board locks. No same-day changes.</div></div>
+        <div class="rule"><span class="rule-num">03</span><div class="rule-text"><strong>−8% stop</strong> or break of setup level. Whichever first.</div></div>
+        <div class="rule"><span class="rule-num">04</span><div class="rule-text"><strong>40% cash floor.</strong> Never deployed past this line.</div></div>
+        <div class="rule"><span class="rule-num">05</span><div class="rule-text"><strong>Earnings within 5 days:</strong> automatic −30 score downgrade.</div></div>
+        <div class="rule"><span class="rule-num">06</span><div class="rule-text"><strong>VIX above 25:</strong> automatic −15. High-vol regimes earn fewer plays.</div></div>
+        <div class="rule"><span class="rule-num">07</span><div class="rule-text"><strong>$1K trading cap</strong> until backtest validates AND two weeks of live execution.</div></div>
+        <div class="rule"><span class="rule-num">08</span><div class="rule-text"><strong>Every play logged.</strong> The ledger is the truth, not memory.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="section-num">06 · Repository</span>
+        <h2>Source of <em>truth</em></h2>
+      </div>
+      <span class="section-tag">read the docs first</span>
+    </div>
+    <div class="links-grid">
+      <a class="link-card fade-in" href="https://github.com/Wordups/the-board-market" target="_blank" rel="noopener">
+        <span class="link-label">Code</span>
+        <span class="link-name">the-board-market</span>
+        <span class="link-desc">Engine, profiles, connectors, triggers, router. Scaffolded. Backtest awaits.</span>
+      </a>
+      <a class="link-card fade-in" href="https://github.com/Wordups/the-board-market/tree/main/docs" target="_blank" rel="noopener">
+        <span class="link-label">Documentation</span>
+        <span class="link-name">/docs</span>
+        <span class="link-desc">CONTEXT, ROADMAP, SCHEMA, CONNECTORS, DESIGN, EVENTS, TASKS. Read first.</span>
+      </a>
+      <a class="link-card fade-in" href="https://wordups.github.io/the-board-system" target="_blank" rel="noopener">
+        <span class="link-label">Sibling system</span>
+        <span class="link-name">The Board · Sports</span>
+        <span class="link-desc">Original parlay discipline framework. Where this DNA started.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">The Board · Markets</div>
+        <div class="footer-meta">Takeoff LLC · Built by Wordups</div>
+      </div>
+      <div class="footer-disclaim">
+        Not financial advice. Not a tip service. Not auto-trading. A personal discipline framework, work in progress. Pre-validation. No capital is being deployed by this system until the backtest passes the pre-committed criteria.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Live ET dateline
+(function(){
+  const el = document.getElementById('dateline');
+  if (!el) return;
+  function fmt() {
+    const now = new Date();
+    const opts = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short' };
+    el.textContent = now.toLocaleString('en-US', opts).toUpperCase();
+  }
+  fmt();
+  setInterval(fmt, 30000);
+})();
+
+// Fade-in observer
+const fadeObs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      fadeObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach((el) => fadeObs.observe(el));
+
+// Progress bar animation
+const progObs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      const fill = e.target.querySelector('.progress-fill');
+      if (fill && fill.dataset.w) {
+        setTimeout(() => { fill.style.width = fill.dataset.w + '%'; }, 200);
+      }
+      progObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.status-card').forEach((c) => progObs.observe(c));
+
+// Factor bar animation
+const factorObs = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) {
+      const fills = e.target.querySelectorAll('.factor-fill');
+      fills.forEach((fill, i) => {
+        if (fill.dataset.target) {
+          setTimeout(() => { fill.style.width = fill.dataset.target + '%'; }, 100 + i * 80);
+        }
+      });
+      factorObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.factors').forEach((f) => factorObs.observe(f));
+</script>
+
+</body>
+</html>

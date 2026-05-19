@@ -1,0 +1,22 @@
+# Phase 1 — engine
+yfinance>=0.2.40
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Phase 3 — profile + web
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+bcrypt>=4.0.0
+python-jose[cryptography]>=3.3.0
+python-multipart>=0.0.12
+jinja2>=3.1.0
+
+# Phase 5 — connectors
+httpx>=0.27.0
+cryptography>=43.0.0
+plaid-python>=24.0.0
+
+# Phase 2 — signal sources
+feedparser>=6.0.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0

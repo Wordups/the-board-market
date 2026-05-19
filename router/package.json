@@ -1,0 +1,16 @@
+{
+  "name": "takeoff-trigger-router",
+  "version": "1.0.0",
+  "description": "Stateless event router for Takeoff LLC products",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260101.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^3.80.0"
+  }
+}

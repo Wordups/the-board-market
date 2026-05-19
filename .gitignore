@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+data/ohlcv_cache/
+data/backtest_results.json
+*.log
+.vscode/
+.idea/
