@@ -46,7 +46,9 @@ DATA_DIR.mkdir(exist_ok=True)
 CACHE_FILE = DATA_DIR / "insider_filings.json"
 CIK_CACHE = DATA_DIR / "sec_company_tickers.json"
 CACHE_TTL_HOURS = 24
-LOOKBACK_DAYS = 180  # we cache 180 days; scoring window is 90
+LOOKBACK_DAYS = 180  # default cache window; scoring window is 90.
+# Audits at historical as_of values can pass lookback_days to refresh_insider_filings
+# to extend the window.
 
 USER_AGENT = "the-board-market research word.brian1@gmail.com"
 REQ_INTERVAL_SEC = 0.12  # ~8 req/sec, under SEC's 10/sec ceiling
@@ -112,26 +114,12 @@ def _load_cik_map() -> dict[str, str]:
 
 # ─────────────────────────── Filing index ───────────────────────────
 
-def _fetch_form4_index(cik: str) -> list[dict]:
-    """
-    Returns a list of {accession_no, filing_date, primary_doc} for Form 4
-    filings, newest first, from data.sec.gov/submissions/CIK{cik}.json.
-    """
-    url = f"https://data.sec.gov/submissions/CIK{cik}.json"
-    body = _throttled_get(url)
-    if not body:
-        return []
-    try:
-        doc = json.loads(body)
-    except json.JSONDecodeError:
-        return []
-
-    recent = (doc.get("filings") or {}).get("recent") or {}
-    forms = recent.get("form") or []
-    accessions = recent.get("accessionNumber") or []
-    dates = recent.get("filingDate") or []
-    primary = recent.get("primaryDocument") or []
-
+def _extract_form4_rows(block: dict) -> list[dict]:
+    """Pick Form 4 entries out of an EDGAR submissions block (recent or older)."""
+    forms = block.get("form") or []
+    accessions = block.get("accessionNumber") or []
+    dates = block.get("filingDate") or []
+    primary = block.get("primaryDocument") or []
     out = []
     for i, form in enumerate(forms):
         if form != "4":
@@ -143,6 +131,64 @@ def _fetch_form4_index(cik: str) -> list[dict]:
             "filing_date": dates[i],
             "primary_doc": primary[i] if i < len(primary) else "",
         })
+    return out
+
+
+def _fetch_form4_index(cik: str, cutoff_date: date | None = None) -> list[dict]:
+    """
+    Returns a list of {accession_no, filing_date, primary_doc} for Form 4
+    filings, newest first. Walks the `recent` block from
+    data.sec.gov/submissions/CIK{cik}.json AND, if `cutoff_date` is older
+    than the oldest `recent` entry, follows the `files` array for archived
+    submissions blocks.
+    """
+    url = f"https://data.sec.gov/submissions/CIK{cik}.json"
+    body = _throttled_get(url)
+    if not body:
+        return []
+    try:
+        doc = json.loads(body)
+    except json.JSONDecodeError:
+        return []
+
+    filings = doc.get("filings") or {}
+    out = _extract_form4_rows(filings.get("recent") or {})
+
+    # Decide whether to load older archive blocks.
+    if cutoff_date is not None:
+        oldest_in_recent: date | None = None
+        if out:
+            try:
+                oldest_in_recent = datetime.strptime(out[-1]["filing_date"], "%Y-%m-%d").date()
+            except ValueError:
+                pass
+        # Walk older `files` if we still need data before what `recent` has.
+        if oldest_in_recent is None or oldest_in_recent > cutoff_date:
+            for archive in filings.get("files") or []:
+                # Each archive entry has filingFrom / filingTo / name
+                try:
+                    a_to = datetime.strptime(archive.get("filingTo", ""), "%Y-%m-%d").date()
+                except ValueError:
+                    a_to = None
+                # Skip archives entirely newer than cutoff is irrelevant — they're older blocks.
+                # Stop once an archive's newest entry is older than our cutoff.
+                a_url = f"https://data.sec.gov/submissions/{archive.get('name')}"
+                a_body = _throttled_get(a_url)
+                if not a_body:
+                    continue
+                try:
+                    a_doc = json.loads(a_body)
+                except json.JSONDecodeError:
+                    continue
+                out.extend(_extract_form4_rows(a_doc))
+                # If this archive's oldest entry is already before cutoff, stop.
+                try:
+                    a_from = datetime.strptime(archive.get("filingFrom", ""), "%Y-%m-%d").date()
+                    if a_from <= cutoff_date:
+                        break
+                except ValueError:
+                    continue
+
     return out
 
 
@@ -256,10 +302,10 @@ def _cache_age_hours(cache: dict) -> float:
         return float("inf")
 
 
-def _refresh_ticker(ticker: str, cik: str) -> dict:
-    """Pull Form 4 filings for ticker, parse the recent ones, return cache entry."""
-    cutoff = date.today() - timedelta(days=LOOKBACK_DAYS)
-    index = _fetch_form4_index(cik)
+def _refresh_ticker(ticker: str, cik: str, lookback_days: int = LOOKBACK_DAYS) -> dict:
+    """Pull Form 4 filings for ticker, parse them, return cache entry."""
+    cutoff = date.today() - timedelta(days=lookback_days)
+    index = _fetch_form4_index(cik, cutoff_date=cutoff)
 
     txns: list[dict] = []
     for entry in index:
@@ -268,7 +314,7 @@ def _refresh_ticker(ticker: str, cik: str) -> dict:
         except ValueError:
             continue
         if fdate < cutoff:
-            break  # index is newest-first
+            continue  # may not be in date order across archive boundaries
         xml = _fetch_filing_xml(cik, entry["accession_no"], entry["primary_doc"])
         if not xml:
             continue
@@ -277,11 +323,12 @@ def _refresh_ticker(ticker: str, cik: str) -> dict:
             row["accession"] = entry["accession_no"]
             txns.append(row)
 
-    return {"cik": cik, "filings": txns}
+    return {"cik": cik, "filings": txns, "lookback_days": lookback_days}
 
 
 def refresh_insider_filings(tickers: Iterable[str] | None = None,
-                            force: bool = False) -> dict:
+                            force: bool = False,
+                            lookback_days: int = LOOKBACK_DAYS) -> dict:
     """Refresh the cached Form 4 transaction list."""
     cache = _load_cache()
     if not force and _cache_age_hours(cache) < CACHE_TTL_HOURS:
@@ -298,9 +345,9 @@ def refresh_insider_filings(tickers: Iterable[str] | None = None,
     for ticker in tickers:
         cik = cik_map.get(ticker.upper())
         if not cik:
-            cache[ticker] = {"cik": None, "filings": []}
+            cache[ticker] = {"cik": None, "filings": [], "lookback_days": lookback_days}
             continue
-        cache[ticker] = _refresh_ticker(ticker, cik)
+        cache[ticker] = _refresh_ticker(ticker, cik, lookback_days=lookback_days)
 
     _save_cache(cache)
     return cache
