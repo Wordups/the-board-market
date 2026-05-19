@@ -6,6 +6,7 @@ venv/
 .DS_Store
 data/ohlcv_cache/
 data/backtest_results.json
+data/earnings_calendar.json
 *.log
 .vscode/
 .idea/
