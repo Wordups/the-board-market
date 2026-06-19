@@ -1,7 +1,9 @@
 """Live execution pilot — places REAL Schwab orders, hard-capped at $100.
 
-Full-auto: ranks the board's tradable (LOCK/LIVE) setups, buys whole shares
-within LIVE_CAPITAL_CAP, and attaches a protective sell-stop to each entry.
+Full-auto: ranks the board's setups by score and buys the best ones it can
+afford a whole share of within LIVE_CAPITAL_CAP, attaching a protective sell-stop
+to each entry. At a $100 cap the pricey LIVE-tier signals won't fit, so it
+deploys into the highest-scored AFFORDABLE name (see min_score()).
 
 THREE INDEPENDENT SAFETY GATES — all must pass before a real order is sent:
   1. LIVE_TRADING_ENABLED truthy            (master kill switch; off by default)
@@ -46,6 +48,18 @@ def account_hash() -> str | None:
     return os.environ.get("SCHWAB_ACCOUNT_HASH") or None
 
 
+def min_score() -> float:
+    """Only trade setups at/above this composite score. Default 0 = buy the best
+    name $100 can actually afford a whole share of. At a $100 cap the LIVE-tier
+    signals (often >$400/share) won't fit, so this lets the bot deploy into the
+    highest-scored AFFORDABLE name (which today is a BENCH-tier ticker). Raise it
+    once the cap is big enough to reach the real signals."""
+    try:
+        return float(os.environ.get("LIVE_MIN_SCORE", 0))
+    except ValueError:
+        return 0.0
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -82,6 +96,7 @@ def live_status() -> dict[str, Any]:
     state["authorized"] = schwab.load_tokens() is not None
     state["account_configured"] = account_hash() is not None
     state["headroom"] = round(capital_cap() - state.get("deployed", 0.0), 2)
+    state["min_score"] = min_score()
     return state
 
 
@@ -120,8 +135,16 @@ def run_live_cycle(client: Any | None = None, dry_run: bool = False) -> dict[str
     open_tickers = {p["ticker"] for p in state["positions"]}
     placed: list[dict[str, Any]] = []
 
+    # Rank ALL setups by score and buy the best ones we can afford a whole share
+    # of within the cap. At $100 the pricey LIVE-tier signals won't fit, so this
+    # deploys into the highest-scored affordable name (see min_score()).
+    floor = min_score()
     setups = sorted(
-        (s for s in board.get("setups", []) if s.get("tier") in ("LOCK", "LIVE")),
+        (
+            s
+            for s in board.get("setups", [])
+            if float(s.get("price") or 0) > 0 and float(s.get("score", 0)) >= floor
+        ),
         key=lambda s: float(s.get("score", 0)),
         reverse=True,
     )

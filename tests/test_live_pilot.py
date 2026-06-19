@@ -54,18 +54,29 @@ def test_capital_cap_is_never_exceeded(live_env):
     client = FakeClient()
     state = live_pilot.run_live_cycle(client=client, dry_run=False)
 
-    # ARM: floor(100/40)=2 -> $80 ; CHEAP: floor(20/15)=1 -> $15 ; total $95 <= $100
-    # EXPENSIVE $200 unaffordable within remaining headroom -> skipped.
+    # Best-affordable across ALL tiers, ranked by score, never exceeding the cap:
+    #   ARM(74) floor(100/40)=2 -> $80 ; CHEAP(73) floor(20/15)=1 -> $15 ($95) ;
+    #   EXPENSIVE(72) $200 unaffordable -> skip ; BENCHX(50) floor(5/5)=1 -> $5 ($100).
     tickers = {p["ticker"]: p for p in state["positions"]}
-    assert set(tickers) == {"ARM", "CHEAP"}
+    assert set(tickers) == {"ARM", "CHEAP", "BENCHX"}
     assert tickers["ARM"]["qty"] == 2
     assert tickers["CHEAP"]["qty"] == 1
-    assert state["deployed"] == 95.0
+    assert tickers["BENCHX"]["qty"] == 1
+    assert state["deployed"] == 100.0  # exactly at the cap, never over
     assert state["deployed"] <= live_pilot.capital_cap()
-    # 2 entries -> 2 buys + 2 protective stops
-    assert len(client.orders) == 4
-    assert "EXPENSIVE" not in tickers
-    assert "BENCHX" not in tickers  # bench tier never traded
+    assert "EXPENSIVE" not in tickers  # unaffordable high-score name skipped
+    # 3 entries -> 3 buys + 3 protective stops
+    assert len(client.orders) == 6
+
+
+def test_min_score_floor_excludes_low_scores(live_env):
+    live_env.setenv("LIVE_TRADING_ENABLED", "true")
+    live_env.setenv("LIVE_MIN_SCORE", "70")  # exclude BENCHX(50)
+    client = FakeClient()
+    state = live_pilot.run_live_cycle(client=client, dry_run=False)
+    tickers = {p["ticker"] for p in state["positions"]}
+    assert "BENCHX" not in tickers  # below the score floor
+    assert tickers == {"ARM", "CHEAP"}
 
 
 def test_dry_run_sends_no_orders(live_env):
