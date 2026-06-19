@@ -65,7 +65,60 @@ python backtest.py      # 5-year simulation
 # Phase 3: initialize profile DB
 cd ..
 python -m profiles.db    # runs migrations
+
+# Generate today's model board and launch the dashboard
+cd ..
+python engine/generate_board.py
+uvicorn app:app --reload
 ```
+
+Open `http://127.0.0.1:8000`. The dashboard calculates an 8% invalidation
+level and 16% (2R) objective for each scored setup. BENCH rows are research-only
+and receive no model allocation.
+
+The Options 101 panel is education-only. Its payoff sandbox models purchased
+calls and puts at expiration; it does not score contracts or route broker orders.
+Fidelity remains read-only/manual import, and Robinhood is not connected.
+
+## $100 Paper Pilot
+
+Paper Pilot automates a local, simulated validation account. It uses the same
+tier sizing, cash floor, concurrency limits, stop, target, and time exit as the
+backtest. It has no broker credentials or order-routing code.
+
+```bash
+# Start a $100 paper ledger
+python -m profiles.paper_pilot start --bankroll 100
+
+# Refresh the board and reconcile open paper positions in one command
+python engine/paper_cycle.py
+
+# Inspect or reset
+python -m profiles.paper_pilot status
+python -m profiles.paper_pilot reset
+```
+
+## Schwab read-only setup
+
+Schwab is the primary broker connector. Phase 5 allows account, position,
+transaction, and quote reads only; no order method is implemented.
+
+1. Create a personal-use application at `https://developer.schwab.com/`.
+2. Copy `.env.example` to `.env` and fill the Schwab app key, secret, and exact
+   registered callback URL. Never commit `.env`.
+3. Generate `BOARD_MARKET_KEY` using the command documented in `.env.example`.
+4. Start locally with `uvicorn app:app --reload --env-file .env`.
+
+The dashboard reports whether configuration is missing or ready for OAuth. It
+does not display secret values and does not claim an account is authorized.
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` builds a public-only artifact and deploys it with
+GitHub Actions. Enable **Settings → Pages → Source → GitHub Actions** once. The
+public site includes the dashboard and market snapshot only; Paper Pilot,
+FastAPI, Schwab OAuth, credentials, and account data remain private. See
+`docs/DEPLOYMENT.md` for the full split.
 
 ## For Claude Code
 

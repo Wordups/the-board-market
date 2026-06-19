@@ -5,10 +5,13 @@ venv/
 .env
 .DS_Store
 data/ohlcv_cache/
+data/*.db
 data/backtest_results.json
 data/earnings_calendar.json
 data/insider_filings.json
 data/sec_company_tickers.json
+.state/
+_site/
 _smoke_*.py
 *.log
 .vscode/
