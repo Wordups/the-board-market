@@ -224,6 +224,15 @@
               <div class="broker-title"><span class="broker-mark schwab">S</span><div><span class="eyebrow">PRIMARY BROKER PATH</span><h3>Charles Schwab</h3></div><span class="connection-state" id="schwab-connection-state">CHECKING</span></div>
               <p id="schwab-connection-copy">The read-only connector can sync accounts, positions, transactions, and quotes after your personal Schwab developer app is approved and authorized.</p>
               <a href="https://developer.schwab.com/" target="_blank" rel="noopener">Open Schwab Developer Portal ↗</a>
+              <div class="live-controls" id="live-controls" hidden>
+                <a class="live-login" id="schwab-login" href="/api/schwab/login">Log in to Schwab ↗</a>
+                <div class="live-row"><span class="eyebrow">Live bot</span><strong id="live-state">checking…</strong></div>
+                <div class="live-actions">
+                  <button id="live-dry" type="button">Preview cycle</button>
+                  <button id="live-run" class="live-danger" type="button">Go live — run cycle</button>
+                </div>
+                <p class="live-note" id="live-note">Real orders require LIVE_TRADING_ENABLED=true, Schwab login, and a funded account. Hard cap $100.</p>
+              </div>
             </article>
             <article class="broker-card">
               <div class="broker-title"><span class="broker-mark fidelity">F</span><div><span class="eyebrow">BROKER WORKFLOW</span><h3>Fidelity</h3></div><span class="connection-state">MANUAL / READ-ONLY</span></div>

@@ -390,3 +390,15 @@ body.quiet .metrics-grid, body.quiet .regime-bar, body.quiet .desk { filter: sat
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* Live trading controls (private backend only) */
+.live-controls { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); display: grid; gap: 10px; }
+.live-login { font-weight: 700; }
+.live-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.live-row strong { font-size: 0.85rem; }
+.live-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.live-actions button { padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: inherit; }
+.live-actions button:disabled { opacity: 0.45; cursor: not-allowed; }
+.live-danger { border-color: #e0443e !important; color: #ff6a63 !important; }
+.live-danger:not(:disabled):hover { background: rgba(224,68,62,0.12); }
+.live-note { font-size: 0.72rem; opacity: 0.7; margin: 0; }
