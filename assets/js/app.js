@@ -98,6 +98,50 @@ async function loadConnectionStatus() {
   }
 }
 
+// Live trading controls — private backend ONLY. The public static page never
+// renders these (HAS_PRIVATE_API is false there), so login/order routes are
+// unreachable from GitHub Pages.
+async function loadLive() {
+  const panel = $("#live-controls");
+  if (!panel) return;
+  if (!HAS_PRIVATE_API) { panel.hidden = true; return; }
+  panel.hidden = false;
+  try {
+    const res = await fetch("/api/live", { cache: "no-store" });
+    if (!res.ok) throw new Error("live api");
+    renderLive(await res.json());
+  } catch (error) {
+    $("#live-state").textContent = "local API offline";
+  }
+}
+
+function renderLive(live) {
+  const deployed = Number(live.deployed ?? 0).toFixed(2);
+  const cap = Number(live.capital_cap ?? 100).toFixed(0);
+  const enabled = Boolean(live.live_trading_enabled);
+  $("#live-state").textContent =
+    `${enabled ? "LIVE" : "OFF"} · $${deployed}/$${cap} deployed · ${live.authorized ? "logged in" : "not logged in"}`;
+  $("#live-run").disabled = !(enabled && live.authorized && live.account_configured);
+}
+
+async function runLive(dryRun) {
+  if (!dryRun && !window.confirm("Place REAL orders within your $100 cap? This spends real money.")) return;
+  try {
+    const res = await fetch("/api/live/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dry_run: dryRun }),
+    });
+    const data = await res.json();
+    if (!res.ok) { $("#live-note").textContent = data.detail || "Live run failed."; return; }
+    $("#live-note").textContent =
+      `${dryRun ? "Preview" : "Placed"}: ${data.last_run_placed ?? 0} setup(s), $${Number(data.deployed ?? 0).toFixed(2)} deployed.`;
+    renderLive(data);
+  } catch (error) {
+    $("#live-note").textContent = "Live run error — is the local backend running?";
+  }
+}
+
 function renderPaperPilot(pilot, errorMessage = "") {
   const idle = !pilot || pilot.status === "idle";
   const active = pilot && pilot.status === "active";
@@ -350,3 +394,10 @@ $$('section[id]').forEach(section => navObserver.observe(section));
 loadBoard();
 loadPaperPilot();
 loadConnectionStatus();
+loadLive();
+{
+  const liveDry = $("#live-dry");
+  const liveRun = $("#live-run");
+  if (liveDry) liveDry.addEventListener("click", () => runLive(true));
+  if (liveRun) liveRun.addEventListener("click", () => runLive(false));
+}

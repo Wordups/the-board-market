@@ -67,17 +67,21 @@ def decrypt_token(encrypted: str) -> str:
     return _fernet().decrypt(encrypted.encode()).decode()
 
 
-def build_authorize_url(state: str) -> str:
+def build_authorize_url(state: str, scope: str = "readonly") -> str:
     """
     Build the URL to redirect the user to for Schwab authorization.
     `state` should be a random per-session value for CSRF protection.
+
+    scope="readonly" for the Phase 5 read-only path; pass scope="trade" (and a
+    Schwab app approved for Accounts & Trading) to enable order placement. Real
+    order routing is still gated by LIVE_TRADING_ENABLED + the $100 capital cap.
     """
     cfg = _config()
     params = {
         "client_id": cfg["SCHWAB_APP_KEY"],
         "redirect_uri": cfg["SCHWAB_REDIRECT_URI"],
         "response_type": "code",
-        "scope": "readonly",  # readonly until Phase 6
+        "scope": scope,
         "state": state,
     }
     return f"{SCHWAB_AUTH_URL}?{urllib.parse.urlencode(params)}"
@@ -225,6 +229,115 @@ class SchwabClient:
         r.raise_for_status()
         return r.json()
 
-    # ─── EXPLICITLY NOT IMPLEMENTED IN PHASE 5 ───
-    # def place_order(...) — Phase 6 only, with confirmation modal + risk guard
-    # def cancel_order(...) — Phase 6 only
+    # ─────────────────────────── Order placement ───────────────────────────
+    # Live order routing. Every entry point that can spend real money checks
+    # LIVE_TRADING_ENABLED first (belt-and-suspenders; the live engine also caps
+    # total deployment at LIVE_CAPITAL_CAP). Default OFF.
+
+    def place_order(self, account_hash: str, order: dict) -> dict:
+        """POST a Schwab order. Returns {order_id, status}. Hard-gated."""
+        if not live_trading_enabled():
+            raise SchwabAuthError(
+                "Live trading is disabled. Set LIVE_TRADING_ENABLED=true to route real orders."
+            )
+        r = self.client.post(f"/accounts/{account_hash}/orders", json=order)
+        r.raise_for_status()
+        # Schwab returns the new order id in the Location header (no body on 201).
+        location = r.headers.get("location", "")
+        order_id = location.rstrip("/").split("/")[-1] if location else None
+        return {"order_id": order_id, "status": r.status_code}
+
+    def get_order(self, account_hash: str, order_id: str) -> dict:
+        r = self.client.get(f"/accounts/{account_hash}/orders/{order_id}")
+        r.raise_for_status()
+        return r.json()
+
+    def cancel_order(self, account_hash: str, order_id: str) -> int:
+        r = self.client.delete(f"/accounts/{account_hash}/orders/{order_id}")
+        r.raise_for_status()
+        return r.status_code
+
+
+def live_trading_enabled() -> bool:
+    """Master kill switch. Real orders are impossible unless this is truthy."""
+    return os.environ.get("LIVE_TRADING_ENABLED", "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def build_equity_market_order(ticker: str, quantity: int, instruction: str) -> dict:
+    """A simple equities market order. instruction = 'BUY' or 'SELL'."""
+    return {
+        "orderType": "MARKET",
+        "session": "NORMAL",
+        "duration": "DAY",
+        "orderStrategyType": "SINGLE",
+        "orderLegCollection": [
+            {
+                "instruction": instruction.upper(),
+                "quantity": quantity,
+                "instrument": {"symbol": ticker.upper(), "assetType": "EQUITY"},
+            }
+        ],
+    }
+
+
+def build_stop_loss_order(ticker: str, quantity: int, stop_price: float) -> dict:
+    """A protective sell-stop for an open long. Rounds stop to 2dp."""
+    return {
+        "orderType": "STOP",
+        "session": "NORMAL",
+        "duration": "GOOD_TILL_CANCEL",
+        "stopPrice": round(stop_price, 2),
+        "orderStrategyType": "SINGLE",
+        "orderLegCollection": [
+            {
+                "instruction": "SELL",
+                "quantity": quantity,
+                "instrument": {"symbol": ticker.upper(), "assetType": "EQUITY"},
+            }
+        ],
+    }
+
+
+# ───────────────────────── Token persistence (.state) ─────────────────────────
+# Encrypted at rest with BOARD_MARKET_KEY (Fernet). Stored under .state/ which is
+# gitignored, so refresh tokens never touch the repo.
+
+def _token_path():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    state = root / ".state"
+    state.mkdir(exist_ok=True)
+    return state / "schwab_tokens.json"
+
+
+def save_tokens(tokens: dict) -> None:
+    """Persist access+refresh tokens encrypted. `tokens` from exchange/refresh."""
+    import json
+
+    payload = {
+        "access_token": encrypt_token(tokens["access_token"]),
+        "refresh_token": encrypt_token(tokens["refresh_token"]),
+        "expires_at": tokens["expires_at"].isoformat()
+        if hasattr(tokens["expires_at"], "isoformat")
+        else tokens["expires_at"],
+    }
+    _token_path().write_text(json.dumps(payload), encoding="utf-8")
+
+
+def load_tokens() -> Optional[dict]:
+    """Load + decrypt tokens, refreshing the access token if expired. None if absent."""
+    import json
+
+    path = _token_path()
+    if not path.exists():
+        return None
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    access = decrypt_token(raw["access_token"])
+    refresh = decrypt_token(raw["refresh_token"])
+    expires_at = datetime.fromisoformat(raw["expires_at"])
+    if datetime.utcnow() >= expires_at - timedelta(minutes=2):
+        refreshed = refresh_access_token(refresh)
+        save_tokens(refreshed)
+        return {"access_token": refreshed["access_token"], "refresh_token": refreshed["refresh_token"]}
+    return {"access_token": access, "refresh_token": refresh}
