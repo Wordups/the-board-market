@@ -46,13 +46,33 @@ UNIVERSE = {
 }
 
 # Flatten for easy iteration
-ALL_TICKERS = [t for category in UNIVERSE.values() for t in category]
+CURATED_TICKERS = [t for category in UNIVERSE.values() for t in category]
+
+# Full S&P 500 expansion — the curated list stays first (its sector labels win),
+# then every S&P 500 name not already present. ~540 tickers total.
+from sp500_constituents import SP500_SECTORS, SP500_TICKERS
+
+ALL_TICKERS = CURATED_TICKERS + [t for t in SP500_TICKERS if t not in CURATED_TICKERS]
 
 # Macro context tickers — always pulled, never traded
 MACRO_CONTEXT = ["^VIX", "^TNX", "^GSPC", "DX-Y.NYB"]
 
-# Sector mapping for downgrade logic and rotation analysis
+# GICS -> internal sector labels, so regime/catalyst scoring applies to the
+# S&P 500 expansion. Unmapped GICS sectors keep their name (scored neutral).
+GICS_TO_INTERNAL = {
+    "information_technology": "tech_growth",
+    "communication_services": "tech_mega",
+    "consumer_discretionary": "consumer",
+    "consumer_staples": "consumer",
+    "financials": "financials",
+    "energy": "energy",
+    "health_care": "healthcare",
+}
+
+# Sector mapping for downgrade logic and rotation analysis.
+# GICS sectors for the S&P 500 expansion; curated labels override below.
 SECTOR_MAP = {
+    **{t: GICS_TO_INTERNAL.get(s, s) for t, s in SP500_SECTORS.items()},
     **{t: "tech_mega" for t in UNIVERSE["mega_cap"][:7]},
     **{t: "healthcare" for t in ["LLY"]},
     **{t: "consumer" for t in ["COST", "AMZN"]},

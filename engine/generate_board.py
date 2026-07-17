@@ -130,9 +130,15 @@ def generate() -> dict:
         ],
         "setups": setups,
     }
-    OUTPUT.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    OUTPUT.write_text(json.dumps(snapshot, separators=(",", ":")), encoding="utf-8")
+    # Charts payload is capped: top 100 by score plus every confirmed breakout,
+    # so the ~540-name universe doesn't ship a multi-MB JSON to the dashboard.
+    keep = {s["ticker"] for s in setups[:100]} | {
+        s["ticker"] for s in setups if s["breakout"]["confirmed"]
+    }
     CHARTS_OUTPUT.write_text(
-        json.dumps({"as_of": snapshot["as_of"], "days": CHART_DAYS, "tickers": charts},
+        json.dumps({"as_of": snapshot["as_of"], "days": CHART_DAYS,
+                    "tickers": {t: c for t, c in charts.items() if t in keep}},
                    separators=(",", ":")),
         encoding="utf-8",
     )

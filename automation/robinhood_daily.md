@@ -29,8 +29,8 @@ The account runs two sleeves inside one cap:
    - Are managed with the same 8% stop / 16% target, plus one extra exit: if price closes back **below the breakout trigger**, SELL — a failed breakout is not held hoping.
    - Never fire when `breakout.confirmed` is false. "Almost breaking out" is not a signal.
 4. **Satellite buys:** rank qualifying setups (score ≥ 60) by score descending, skip tickers already held:
-   - 1 qualifier → it may take the full cap; fund the buy by selling the needed dollars of VOO.
-   - 2+ qualifiers → top 2, weighted 60/40 of the cap, funded from VOO.
+   - 1 qualifier → it may take the full remaining headroom (after any breakout entry); fund the buy by selling the needed dollars of VOO.
+   - 2+ qualifiers → top 2, weighted 60/40 of remaining headroom, funded from VOO.
    - 0 qualifiers → no satellite action. Log it.
 5. **Core sweep (always last):** any uninvested headroom (cap − open cost basis) above $1.00 → BUY that dollar amount of VOO. This runs every day, including STALE days and no-qualifier days. Day one, this means the full cap goes into VOO.
 6. **Log every decision** — one JSON line appended to `automation/ledger.jsonl`:
