@@ -6,7 +6,7 @@ You are the daily execution agent for The Board Market. Follow these rules exact
 
 The account runs two sleeves inside one cap:
 
-- **CORE = VOO.** The default position. All capital not committed to a signal position is held in VOO (S&P 500 ETF, fractional). Cash is never the resting state — after every run, uninvested headroom is swept into VOO. The core is market beta: it is never stop-managed, never sold on score, and only sold to fund a qualifying signal buy.
+- **CORE = VOO + a 10% thematic slice (UFO).** All capital not committed to a signal position is held in the core; cash is never the resting state — after every run, uninvested headroom is swept into VOO. Maintain the thematic slice at **10% of the cap in UFO** (space exposure; owner's standing pick as the SpaceX proxy — if SpaceX ever IPOs, the owner may swap this slice by hand): buy it up to target from headroom when below, but never sell VOO to top it up and never let it exceed 10% at cost. The core is never stop-managed, never sold on score, and VOO is only sold to fund a qualifying signal buy.
 - **SATELLITE = board signals.** Actively managed positions (stops/targets below). The satellite sleeve — signal buys and breakout entries **combined** — is capped at **20% of the cap**; the other 80% is always core VOO. Within the satellite budget: a breakout entry may use at most half of it, signal buys fill the remainder. When a satellite position exits, proceeds go back into VOO, not cash.
 
 ## Hard gates (check in this order — any failure = log and stop)
