@@ -235,7 +235,17 @@ function renderAll() {
   renderHeader();
   renderMetrics();
   renderRows();
+  renderParlay();
   renderShortlist();
+}
+
+// v3 profit_outlook {stop_pct, target_pct, rr, ev_per_100} — absent on older snapshots.
+function outlookSummary(outlook, compact = false) {
+  if (!outlook || typeof outlook !== "object") return "";
+  const ev = Number(outlook.ev_per_100);
+  const evLabel = Number.isFinite(ev) ? `EV ${ev >= 0 ? "+" : "−"}$${Math.abs(ev).toFixed(2)}${compact ? "" : "/$100"}` : "";
+  const rrLabel = outlook.rr ? `R/R ${clean(outlook.rr)}` : "";
+  return [rrLabel, evLabel].filter(Boolean).join(" · ");
 }
 
 function renderHeader() {
@@ -283,7 +293,7 @@ function renderRows() {
       <td class="number"><span class="entry-zone">${money(row.price)}</span><br><small class="${row.change_pct >= 0 ? "gain" : "loss"}">${row.change_pct >= 0 ? "+" : ""}${row.change_pct.toFixed(2)}%</small></td>
       <td><span class="entry-zone">${money(row.entry_low)}–${money(row.entry_high)}</span></td>
       <td class="number loss">${money(row.stop)}</td>
-      <td class="number gain">${money(row.target)}</td>
+      <td class="number gain">${money(row.target)}${outlookSummary(row.profit_outlook, true) ? `<br><small class="outlook-mini">${outlookSummary(row.profit_outlook, true)}</small>` : ""}</td>
       <td class="number score-cell"><span class="score-value">${row.score.toFixed(0)}</span><div class="score-track"><i style="width:${Math.max(0, Math.min(row.score, 100))}%"></i></div></td>
     </tr>`).join("") : `<tr><td class="loading-row" colspan="7">No setups match this filter.</td></tr>`;
 
@@ -316,6 +326,7 @@ function renderDetail(setup) {
     <div class="detail-head"><div><span class="eyebrow">${clean(slug(setup.sector || "setup"))}</span><h3>${clean(setup.ticker)}</h3><div style="margin-top:7px">${tierMarkup(setup.tier)}</div></div><div class="score-orbit">${setup.score.toFixed(0)}</div></div>
     <div class="detail-price"><div><span class="eyebrow">Last close</span><strong>${money(setup.price)}</strong></div><div><span class="eyebrow">Session</span><strong class="${setup.change_pct >= 0 ? "gain" : "loss"}">${setup.change_pct >= 0 ? "+" : ""}${setup.change_pct.toFixed(2)}%</strong></div></div>
     <div class="plan-box"><div><span class="eyebrow">Ref. entry</span><strong>${money(setup.price)}</strong></div><div><span class="eyebrow">Stop</span><strong class="loss">${money(setup.stop)}</strong></div><div><span class="eyebrow">2R target</span><strong class="gain">${money(setup.target)}</strong></div></div>
+    ${outlookSummary(setup.profit_outlook) ? `<div class="outlook-line"><span class="eyebrow">Profit outlook</span><span>${outlookSummary(setup.profit_outlook)}${Number.isFinite(Number(setup.profit_outlook.stop_pct)) && Number.isFinite(Number(setup.profit_outlook.target_pct)) ? ` · ${Number(setup.profit_outlook.stop_pct)}% / +${Number(setup.profit_outlook.target_pct)}%` : ""}</span></div>` : ""}
     <div id="setup-chart-box" class="chart-box"></div>
     <div class="factor-list">${factorRows}</div>
     <div class="allocation-box">
@@ -343,6 +354,35 @@ function renderDetail(setup) {
   $("#save-button").addEventListener("click", () => toggleSaved(setup.ticker));
   if (qualified) $("#plan-button").addEventListener("click", () => toggleSaved(setup.ticker, true));
   window.renderSetupChart?.(setup);
+}
+
+// v3 parlay_ladder {execution, eligible_count, rungs:[{n_legs, legs:[{ticker, score, tier, win_rate}], combined_prob, fair_american, rung}]}
+// Absent on older cached snapshots — the section stays hidden.
+function renderParlay() {
+  const section = $("#parlay");
+  if (!section) return;
+  const ladder = state.data?.parlay_ladder;
+  const rungs = Array.isArray(ladder?.rungs) ? ladder.rungs : [];
+  if (!rungs.length) { section.hidden = true; return; }
+  section.hidden = false;
+  $("#parlay-execution").textContent = ladder.execution || "REPORT_ONLY — no parlay venue connected";
+  $("#parlay-eligible").textContent = Number.isFinite(Number(ladder.eligible_count)) ? `${ladder.eligible_count} satellite-eligible setups` : "";
+  $("#parlay-rungs").innerHTML = rungs.map(rung => {
+    const fair = Number(rung.fair_american);
+    const fairLabel = Number.isFinite(fair) ? `${fair > 0 ? "+" : ""}${fair}` : "—";
+    const prob = Number(rung.combined_prob);
+    const probLabel = Number.isFinite(prob) ? `${(prob * 100).toFixed(1)}%` : "—";
+    const legs = (rung.legs || []).map(leg => `<li><strong>${clean(leg.ticker)}</strong><span>${tierMarkup(String(leg.tier || "—"))}</span><span class="number">${Number(leg.score || 0).toFixed(0)} · ${Number.isFinite(Number(leg.win_rate)) ? `${Math.round(Number(leg.win_rate) * 100)}%` : "—"}</span></li>`).join("");
+    const legCount = Number(rung.n_legs) || (rung.legs || []).length;
+    return `<article class="parlay-card">
+      <div class="parlay-card-top"><span class="rung-badge">${clean(rung.rung || fairLabel)}</span><span class="eyebrow">${legCount} legs</span></div>
+      <ul class="parlay-legs">${legs}</ul>
+      <div class="parlay-stats">
+        <div><span class="eyebrow">Combined prob</span><strong>${probLabel}</strong></div>
+        <div><span class="eyebrow">Fair odds</span><strong>${fairLabel}</strong></div>
+      </div>
+    </article>`;
+  }).join("");
 }
 
 function toggleSaved(ticker, forceAdd = false) {
