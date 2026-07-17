@@ -42,6 +42,11 @@
     </aside>
 
     <main id="main">
+      <nav class="site-switch" aria-label="Board network">
+        <span class="site-switch-label">The Board Network</span>
+        <a class="site-tab" href="https://wordups.github.io/the-board-system/">Sports Board</a>
+        <a class="site-tab active" href="https://wordups.github.io/the-board-market/" aria-current="page">Stock Market</a>
+      </nav>
       <header class="topbar">
         <div class="market-state">
           <span class="pulse" aria-hidden="true"></span>
@@ -146,6 +151,18 @@
               <p>Open a row to inspect factor quality, sizing, and the complete risk box.</p>
             </div>
           </aside>
+        </section>
+
+        <section class="parlay-section" id="parlay" hidden>
+          <div class="parlay-head">
+            <div>
+              <span class="kicker">PARLAY LADDER · REPORT ONLY</span>
+              <h2>What the win rates<br><em>imply as fair odds.</em></h2>
+            </div>
+            <p>Hypothetical multi-leg combos stacked from today’s satellite-eligible setups. Model math only — <strong>no parlay venue is connected</strong> and nothing on this ladder is placeable.</p>
+          </div>
+          <div class="parlay-grid" id="parlay-rungs"></div>
+          <p class="parlay-disclaimer"><span aria-hidden="true">◆</span> <span id="parlay-execution">REPORT_ONLY — no parlay venue connected</span> · <span id="parlay-eligible"></span></p>
         </section>
 
         <section class="watchlist-section" id="watchlist">
