@@ -16,6 +16,7 @@ Refresh policy:  24h staleness. Backtest path treats the cache as ground truth
 Public API:
     refresh_calendar(force=False) -> dict
     days_to_next_earnings(ticker, as_of) -> int | None
+    get_earnings_dates(ticker) -> list[date] | None   (None = cache miss)
 
 The downgrade rule in score.py is already wired (earnings within 5 days -> -30);
 this module just supplies the data.
@@ -159,7 +160,10 @@ def refresh_calendar(tickers: Iterable[str] | None = None,
         tickers = ALL_TICKERS
 
     for ticker in tickers:
-        fresh = _refresh_ticker(ticker)
+        try:
+            fresh = _refresh_ticker(ticker)
+        except Exception:
+            fresh = []  # per-ticker network failure must not abort the refresh
         if fresh:
             cache[ticker] = fresh
         elif ticker not in cache:
@@ -167,6 +171,24 @@ def refresh_calendar(tickers: Iterable[str] | None = None,
 
     _save_cache(cache)
     return cache
+
+
+def get_earnings_dates(ticker: str) -> list[date] | None:
+    """
+    All cached earnings dates for `ticker`, ascending. Returns None when the
+    ticker is absent from the cache (data unavailable) — callers must treat
+    None as "unknown", not "no earnings".
+    """
+    cache = _load_cache()
+    dates_iso = cache.get(ticker)
+    if dates_iso is None:
+        return None
+    out = []
+    for iso in dates_iso:
+        d = _to_date(iso)
+        if d is not None:
+            out.append(d)
+    return sorted(out)
 
 
 def days_to_next_earnings(ticker: str, as_of: date | datetime) -> int | None:

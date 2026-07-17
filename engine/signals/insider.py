@@ -29,7 +29,8 @@ Network notes:
 
 Public API:
     refresh_insider_filings(tickers=None, force=False) -> dict
-    insider_signal(ticker, as_of) -> (score, notes)
+    insider_signal(ticker, as_of) -> (score, notes)          # legacy 0-7 band
+    smart_money_signal(ticker, as_of) -> (score, notes)      # v3 0-15 factor
 """
 
 from __future__ import annotations
@@ -134,10 +135,11 @@ def _extract_form4_rows(block: dict) -> list[dict]:
     return out
 
 
-def _fetch_form4_index(cik: str, cutoff_date: date | None = None) -> list[dict]:
+def _fetch_form4_index(cik: str, cutoff_date: date | None = None) -> list[dict] | None:
     """
     Returns a list of {accession_no, filing_date, primary_doc} for Form 4
-    filings, newest first. Walks the `recent` block from
+    filings, newest first — or None when EDGAR could not be reached (so
+    callers can distinguish network failure from a genuinely empty index. Walks the `recent` block from
     data.sec.gov/submissions/CIK{cik}.json AND, if `cutoff_date` is older
     than the oldest `recent` entry, follows the `files` array for archived
     submissions blocks.
@@ -145,11 +147,11 @@ def _fetch_form4_index(cik: str, cutoff_date: date | None = None) -> list[dict]:
     url = f"https://data.sec.gov/submissions/CIK{cik}.json"
     body = _throttled_get(url)
     if not body:
-        return []
+        return None  # network / EDGAR unavailable — distinct from "no Form 4s"
     try:
         doc = json.loads(body)
     except json.JSONDecodeError:
-        return []
+        return None
 
     filings = doc.get("filings") or {}
     out = _extract_form4_rows(filings.get("recent") or {})
@@ -221,6 +223,16 @@ def _parse_form4(xml_bytes: bytes) -> list[dict]:
     if owner_node is not None and owner_node.text:
         owner_name = owner_node.text.strip()
 
+    # Role flags — officer/director conviction matters for Smart Money v3.
+    def _flag(path: str) -> bool:
+        node = root.find(path)
+        if node is None or node.text is None:
+            return False
+        return node.text.strip().lower() in ("1", "true")
+
+    is_officer = _flag(".//reportingOwner/reportingOwnerRelationship/isOfficer")
+    is_director = _flag(".//reportingOwner/reportingOwnerRelationship/isDirector")
+
     rows = []
     for tx in root.findall(".//nonDerivativeTable/nonDerivativeTransaction"):
         code = _txt(tx, "transactionCoding/transactionCode")
@@ -249,6 +261,8 @@ def _parse_form4(xml_bytes: bytes) -> list[dict]:
             "price": price_f,
             "value": shares_f * price_f,
             "owner": owner_name,
+            "is_officer": is_officer,
+            "is_director": is_director,
         })
     return rows
 
@@ -306,6 +320,11 @@ def _refresh_ticker(ticker: str, cik: str, lookback_days: int = LOOKBACK_DAYS) -
     """Pull Form 4 filings for ticker, parse them, return cache entry."""
     cutoff = date.today() - timedelta(days=lookback_days)
     index = _fetch_form4_index(cik, cutoff_date=cutoff)
+    if index is None:
+        # EDGAR unreachable — mark the entry so scoring falls back to neutral
+        # instead of reading "no filings" as a real (bearish) signal.
+        return {"cik": cik, "filings": [], "lookback_days": lookback_days,
+                "error": "FETCH_FAILED"}
 
     txns: list[dict] = []
     for entry in index:
@@ -345,9 +364,19 @@ def refresh_insider_filings(tickers: Iterable[str] | None = None,
     for ticker in tickers:
         cik = cik_map.get(ticker.upper())
         if not cik:
-            cache[ticker] = {"cik": None, "filings": [], "lookback_days": lookback_days}
+            # No CIK: either an index/ETF (no Form 4s exist) or the CIK map
+            # itself failed to download. If the map is empty, treat as a fetch
+            # failure so scoring degrades to neutral instead of bearish.
+            entry = {"cik": None, "filings": [], "lookback_days": lookback_days}
+            if not cik_map:
+                entry["error"] = "FETCH_FAILED"
+            if ticker not in cache or not cik_map:
+                cache[ticker] = entry
             continue
-        cache[ticker] = _refresh_ticker(ticker, cik, lookback_days=lookback_days)
+        fresh = _refresh_ticker(ticker, cik, lookback_days=lookback_days)
+        if fresh.get("error") and (cache.get(ticker) or {}).get("filings"):
+            continue  # keep the last good pull rather than clobbering it
+        cache[ticker] = fresh
 
     _save_cache(cache)
     return cache
@@ -435,6 +464,105 @@ def insider_signal(ticker: str, as_of: date | datetime) -> tuple[float, list[str
         notes.append("CLUSTER_2_BUYERS")
 
     return float(score), notes
+
+
+# ─────────────────────────── Smart Money v3 (0-15) ───────────────────────────
+
+SMART_MONEY_NEUTRAL = 7.0   # fallback when EDGAR data is unavailable
+SMART_MONEY_BASE = 4.0      # baseline when data IS available (net-selling cap)
+
+
+def _dollar_scale(net_dollars: float) -> float:
+    """Dollar-size scaling applied to the buy bonuses."""
+    if net_dollars < 100_000:
+        return 0.4
+    if net_dollars < 500_000:
+        return 0.7
+    return 1.0
+
+
+def smart_money_signal(ticker: str, as_of: date | datetime) -> tuple[float, list[str]]:
+    """
+    Smart Money factor on the full 0-15 scale (v3, replaces the 7/15 stub).
+
+    Scale:
+        unavailable data           -> 7.0 neutral (never crash / never zero out)
+        available, no net buying   -> 4.0 baseline (net-selling regime cap)
+        cluster buying             -> +6 (2 distinct insiders) / +8 (3+), 90d window
+        officer/director OM buy    -> +4
+        dollar-size scaling        -> bonuses x0.4 (<$100k) / x0.7 (<$500k) / x1.0
+        cap                        -> 15
+
+    Legacy cache rows predate the is_officer/is_director fields; any Form 4
+    filer is an insider by definition, so rows missing the fields still earn
+    the officer/director credit.
+    """
+    as_of_d = _to_date(as_of)
+    if as_of_d is None:
+        return SMART_MONEY_NEUTRAL, ["SMART_MONEY_UNAVAILABLE", "INVALID_AS_OF"]
+
+    cache = _load_cache()
+    entry = cache.get(ticker.upper()) or cache.get(ticker)
+    if not entry or entry.get("error"):
+        return SMART_MONEY_NEUTRAL, ["SMART_MONEY_UNAVAILABLE"]
+    if entry.get("cik") is None:
+        # Ticker has no EDGAR identity (index/ETF/crypto proxy) — no Form 4
+        # universe exists for it, so stay neutral rather than bearish.
+        return SMART_MONEY_NEUTRAL, ["SMART_MONEY_NO_CIK"]
+
+    txns = entry.get("filings") or []
+    window_start = as_of_d - timedelta(days=90)
+
+    buy_dollars = 0.0
+    sell_dollars = 0.0
+    buyers: set[str] = set()
+    officer_buy = False
+
+    for row in txns:
+        rd = _to_date(row.get("date") or row.get("filing_date"))
+        if rd is None or rd > as_of_d or rd < window_start:
+            continue
+        code = row.get("code") or ""
+        value = float(row.get("value") or 0.0)
+        if code in BUY_CODES and value > 0:
+            buy_dollars += value
+            owner = row.get("owner") or ""
+            if owner:
+                buyers.add(owner)
+            if ("is_officer" not in row and "is_director" not in row) or \
+                    row.get("is_officer") or row.get("is_director"):
+                officer_buy = True
+        elif code in SELL_CODES and value > 0:
+            sell_dollars += value
+
+    net = buy_dollars - sell_dollars
+    notes: list[str] = []
+
+    if buy_dollars <= 0 or net <= 0:
+        if sell_dollars > 0:
+            notes.append(f"NET_SELL_${int(sell_dollars - buy_dollars):,}")
+        else:
+            notes.append("NO_OPEN_MARKET_BUYS")
+        return SMART_MONEY_BASE, notes
+
+    notes.append(f"NET_BUY_${int(net):,}")
+    bonus = 0.0
+    if len(buyers) >= 3:
+        bonus += 8.0
+        notes.append(f"CLUSTER_{len(buyers)}_BUYERS")
+    elif len(buyers) == 2:
+        bonus += 6.0
+        notes.append("CLUSTER_2_BUYERS")
+    if officer_buy:
+        bonus += 4.0
+        notes.append("OFFICER_DIRECTOR_BUY")
+
+    scale = _dollar_scale(net)
+    if scale < 1.0:
+        notes.append(f"DOLLAR_SCALE_{scale}")
+
+    score = min(15.0, SMART_MONEY_BASE + bonus * scale)
+    return round(score, 1), notes
 
 
 if __name__ == "__main__":
