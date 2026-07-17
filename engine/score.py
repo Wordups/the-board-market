@@ -4,11 +4,19 @@ Composite 100-point setup model. Calibrated for 60-65% win rate target.
 
 Factor weights:
   - Technical (20):     trend, S/R, volume pattern
-  - Catalyst (20):      earnings proximity, news flow
+  - Catalyst (20):      sector baseline (0-8) + event layer (0-12: post-earnings
+                        -beat drift, scheduled earnings catalysts)
   - Rel Strength (15):  vs SPY and sector ETF
-  - Smart Money (15):   placeholder for Form 4 / 13F (Phase 2)
+  - Smart Money (15):   SEC EDGAR Form 4 insider buying (neutral 7 when
+                        data unavailable)
   - Macro (15):         VIX regime, yields, sector tailwind
   - Sentiment (15):     RSI extremes, distance from MA
+
+Guardrails (v3, report-side):
+  - Listing cap:  < 25 trading sessions of history -> tier capped at BENCH.
+  - reject_zone:  "chalk" (close > 1.10x MA20) / "longshot" (close < MA200 in
+                  stacked-bear or RSI(14) < 25) / None. Enforcement is
+                  runner-side; the engine only flags.
 
 Auto-downgrades:
   - Earnings within 5 days:  -30
@@ -80,33 +88,107 @@ def technical_score(df: pd.DataFrame) -> tuple[float, list]:
 
 # ─────────────────────────── Catalyst (20 pts) ───────────────────────────
 
-def catalyst_score(ticker: str, as_of: datetime, earnings_calendar: dict = None) -> tuple[float, list]:
-    """Catalyst proximity. Earnings is the main driver; macro events handled in macro score."""
+# Sector-tilted baseline, legacy 0-15 weights (rescaled to 0-8 in v3).
+SECTOR_CATALYST_BASE = {
+    "tech_mega": 12,
+    "tech_growth": 14,
+    "energy": 13,   # current geopolitical tailwind
+    "defense": 13,  # current geopolitical tailwind
+    "financials": 10,
+    "healthcare": 10,
+    "consumer": 9,
+    "etf_sector": 8,
+    "etf_macro": 6,
+    "crypto": 15,   # high vol = high catalyst density
+    "unknown": 8,
+}
+
+
+def _to_date(value):
+    if isinstance(value, datetime):
+        return value.date()
+    if hasattr(value, "year") and not isinstance(value, datetime):
+        return value
+    try:
+        return pd.Timestamp(value).date()
+    except Exception:
+        return None
+
+
+def _earnings_event_layer(ticker: str, as_of: datetime, df: pd.DataFrame,
+                          earnings_dates: list | None) -> tuple[float, list]:
+    """
+    Event layer 0-12 from the earnings calendar:
+      - Post-earnings-beat drift window: 2-10 sessions after a beat -> +6..+12.
+        Beat proxy = first-session price reaction (calendar carries dates only,
+        no EPS surprise): >= +3% -> +6, >= +5% -> +9, >= +8% -> +12.
+      - Confirmed upcoming earnings 6-30 days out -> +3 (scheduled catalyst
+        outside the <=5-day risk window, which stays in apply_downgrades).
+    Graceful degradation: unknown calendar -> 0 with an UNAVAILABLE note.
+    """
     notes = []
+    if earnings_dates is None:
+        return 0.0, ["CATALYST_EVENTS_UNAVAILABLE"]
+    if df is None or len(df) < 3:
+        return 0.0, []
 
-    # Without an earnings feed (Phase 2), score based on sector tailwind
+    as_of_d = _to_date(as_of)
+    dates = sorted(d for d in (_to_date(x) for x in earnings_dates) if d is not None)
+    past = [d for d in dates if d <= as_of_d]
+    event = 0.0
+
+    if past:
+        last_e = past[-1]
+        after_mask = df.index > pd.Timestamp(last_e)
+        sessions_after = int(after_mask.sum())
+        pre_pos = len(df) - sessions_after - 1
+        if 2 <= sessions_after <= 10 and pre_pos >= 0:
+            pre_close = float(df["Close"].iloc[pre_pos])
+            post_close = float(df["Close"].iloc[pre_pos + 1])
+            reaction = (post_close / pre_close - 1) if pre_close else 0.0
+            if reaction >= 0.08:
+                event = 12.0
+            elif reaction >= 0.05:
+                event = 9.0
+            elif reaction >= 0.03:
+                event = 6.0
+            if event:
+                notes.append(f"PED_DRIFT_S{sessions_after}_R{reaction * 100:.1f}PCT")
+
+    if event == 0.0:
+        upcoming = [(d - as_of_d).days for d in dates if d >= as_of_d]
+        if upcoming and 6 <= upcoming[0] <= 30:
+            event = 3.0
+            notes.append(f"EARNINGS_AHEAD_{upcoming[0]}D")
+
+    return event, notes
+
+
+def catalyst_score(ticker: str, as_of: datetime, df: pd.DataFrame = None,
+                   earnings_dates: list | None = None) -> tuple[float, list]:
+    """
+    Catalyst 0-20 (v3): sector baseline rescaled to 0-8 + event layer 0-12.
+    Earnings-PROXIMITY risk stays in apply_downgrades — never scored here.
+    """
+    notes = []
     sector = SECTOR_MAP.get(ticker, "unknown")
-
-    # Default catalyst score — sector-tilted baseline
-    base = {
-        "tech_mega": 12,
-        "tech_growth": 14,
-        "energy": 13,   # current geopolitical tailwind
-        "defense": 13,  # current geopolitical tailwind
-        "financials": 10,
-        "healthcare": 10,
-        "consumer": 9,
-        "etf_sector": 8,
-        "etf_macro": 6,
-        "crypto": 15,   # high vol = high catalyst density
-        "unknown": 8,
-    }
-
-    score = base.get(sector, 8)
+    base = round(SECTOR_CATALYST_BASE.get(sector, 8) * 8 / 15, 1)
     notes.append(f"SECTOR_BASE_{sector}")
 
-    # Earnings proximity penalty handled in downgrades, not here
-    return score, notes
+    if earnings_dates is None:
+        try:
+            try:
+                from calendars.earnings import get_earnings_dates
+            except ImportError:
+                from engine.calendars.earnings import get_earnings_dates
+            earnings_dates = get_earnings_dates(ticker)
+        except Exception:
+            earnings_dates = None
+
+    event, event_notes = _earnings_event_layer(ticker, as_of, df, earnings_dates)
+    notes.extend(event_notes)
+
+    return min(base + event, 20.0), notes
 
 
 # ─────────────────── Relative Strength (15 pts) ───────────────────
@@ -148,14 +230,23 @@ def relative_strength_score(df: pd.DataFrame, spy_df: pd.DataFrame) -> tuple[flo
     return min(score, 15), notes
 
 
-# ─────────────────── Smart Money (15 pts) — Phase 2 placeholder ───────────────────
+# ─────────────────── Smart Money (15 pts) — SEC EDGAR Form 4 ───────────────────
 
-def smart_money_score(ticker: str) -> tuple[float, list]:
+def smart_money_score(ticker: str, as_of: datetime | None = None) -> tuple[float, list]:
     """
-    Phase 2: parses Form 4 insider buys + 13F institutional adds + congressional cluster.
-    Phase 1: returns neutral 7/15.
+    Real Smart Money factor from the Form 4 insider scraper
+    (engine/signals/insider.py, cached daily under data/).
+    Degrades to neutral 7/15 whenever the feed is unavailable — a
+    network-degraded run must never crash or zero out scores.
     """
-    return 7, ["PHASE_2_PLACEHOLDER"]
+    try:
+        try:
+            from signals.insider import smart_money_signal
+        except ImportError:
+            from engine.signals.insider import smart_money_signal
+        return smart_money_signal(ticker, as_of or datetime.now())
+    except Exception:
+        return 7.0, ["SMART_MONEY_UNAVAILABLE"]
 
 
 # ─────────────────── Macro (15 pts) ───────────────────
@@ -211,6 +302,15 @@ def macro_score(ticker: str, vix: float, tnx: float, spy_trend: str) -> tuple[fl
 
 # ─────────────────── Sentiment (15 pts) ───────────────────
 
+def rsi14(df: pd.DataFrame) -> float:
+    """Latest RSI(14) value for the frame."""
+    delta = df["Close"].diff()
+    gain = delta.where(delta > 0, 0).rolling(14).mean()
+    loss = -delta.where(delta < 0, 0).rolling(14).mean()
+    rs = gain / loss
+    return float((100 - (100 / (1 + rs))).iloc[-1])
+
+
 def sentiment_score(df: pd.DataFrame) -> tuple[float, list]:
     """RSI + distance from MA = mean-reversion / continuation read."""
     if len(df) < 50:
@@ -219,12 +319,7 @@ def sentiment_score(df: pd.DataFrame) -> tuple[float, list]:
     notes = []
     score = 0
 
-    # RSI(14)
-    delta = df["Close"].diff()
-    gain = delta.where(delta > 0, 0).rolling(14).mean()
-    loss = -delta.where(delta < 0, 0).rolling(14).mean()
-    rs = gain / loss
-    rsi = (100 - (100 / (1 + rs))).iloc[-1]
+    rsi = rsi14(df)
 
     if 50 <= rsi <= 65:
         score += 10  # bullish but not extended
@@ -290,12 +385,45 @@ def apply_downgrades(score: float, ticker: str, as_of: datetime,
     return score, flags
 
 
+# ─────────────────── Entry-zone rejection (v3 guardrail) ───────────────────
+
+LISTING_CAP_SESSIONS = 25
+LISTING_CAP_FLAG = "LISTING_CAP (<25 sessions)"
+
+
+def entry_reject_zone(df: pd.DataFrame) -> str | None:
+    """
+    Chalk/longshot analog of the value-zone rejection:
+      "chalk"    — close > 1.10 x MA20 (chasing an extended move)
+      "longshot" — close < MA200 AND (stacked-bear alignment OR RSI(14) < 25)
+      None       — entry zone acceptable
+    Engine-side flag only; enforcement is runner-side.
+    """
+    if df is None or len(df) < 20:
+        return None
+    close = float(df["Close"].iloc[-1])
+    ma20 = float(df["Close"].rolling(20).mean().iloc[-1])
+    if ma20 and close > 1.10 * ma20:
+        return "chalk"
+
+    if len(df) < 200:
+        return None
+    ma50 = float(df["Close"].rolling(50).mean().iloc[-1])
+    ma200 = float(df["Close"].rolling(200).mean().iloc[-1])
+    if close < ma200:
+        stacked_bear = close < ma20 < ma50 < ma200
+        if stacked_bear or rsi14(df) < 25:
+            return "longshot"
+    return None
+
+
 # ─────────────────── Composite ───────────────────
 
 def score_setup(ticker: str, df: pd.DataFrame, spy_df: pd.DataFrame,
                 vix: float, tnx: float, as_of: datetime,
                 earnings_days: int | None = None,
-                fomc_week: bool = False) -> dict:
+                fomc_week: bool = False,
+                earnings_dates: list | None = None) -> dict:
     """Full composite scoring. Returns dict with tier, score, factor breakdown, flags."""
 
     # Determine SPY trend
@@ -314,9 +442,9 @@ def score_setup(ticker: str, df: pd.DataFrame, spy_df: pd.DataFrame,
 
     # Factor scores
     tech, tech_notes = technical_score(df)
-    cat, cat_notes = catalyst_score(ticker, as_of)
+    cat, cat_notes = catalyst_score(ticker, as_of, df=df, earnings_dates=earnings_dates)
     rs, rs_notes = relative_strength_score(df, spy_df)
-    sm, sm_notes = smart_money_score(ticker)
+    sm, sm_notes = smart_money_score(ticker, as_of)
     macro, macro_notes = macro_score(ticker, vix, tnx, spy_trend)
     sent, sent_notes = sentiment_score(df)
 
@@ -328,21 +456,30 @@ def score_setup(ticker: str, df: pd.DataFrame, spy_df: pd.DataFrame,
     )
 
     # Tier assignment.
-    # Phase 1 note: Smart Money is a 7/15 stub and Catalyst is sector-baseline
-    # only (max 15/20). That removes ~13–16 points from the achievable ceiling
-    # depending on sector, capping realistic scores at ~80 across the universe
-    # (theoretical max ~86 for crypto, ~85 for tech_growth — both require every
-    # other factor to max simultaneously with zero downgrades). LOCK at 85 is
-    # therefore near-unreachable until Phase 2 wires real Form 4 / 13F and
-    # earnings/news feeds. This is intentional: the system should refuse
-    # high-conviction calls when load-bearing signals don't exist yet. Do not
-    # lower the threshold to compensate.
+    # v3 note: Smart Money (Form 4) and the Catalyst event layer are wired, so
+    # the theoretical ceiling is a true 100 and LOCK (85+) is reachable — but
+    # only when real insider buying and a real catalyst coincide with strong
+    # technicals. When feeds are unavailable the factors degrade to neutral
+    # (Smart Money 7/15) or baseline (Catalyst 0-8), reverting to the Phase-1
+    # ~80 ceiling. Do not lower the thresholds to compensate.
     if final_score >= 85:
         tier = "LOCK"
     elif final_score >= 71:
         tier = "LIVE"
     else:
         tier = "BENCH"
+
+    # Listing cap (Rule-48 analog): < 25 trading sessions of price history
+    # -> tier capped at BENCH regardless of score.
+    listing_capped = len(df) < LISTING_CAP_SESSIONS
+    if listing_capped:
+        tier = "BENCH"
+        flags.append(LISTING_CAP_FLAG)
+
+    # Entry-zone rejection flag (chalk/longshot). Runner enforces; engine flags.
+    reject_zone = entry_reject_zone(df)
+    if reject_zone:
+        flags.append(f"REJECT_ZONE_{reject_zone.upper()}")
 
     return {
         "ticker": ticker,
@@ -359,10 +496,13 @@ def score_setup(ticker: str, df: pd.DataFrame, spy_df: pd.DataFrame,
             "sentiment": round(sent, 1),
         },
         "flags": flags,
+        "listing_capped": listing_capped,
+        "reject_zone": reject_zone,
         "notes": {
             "technical": tech_notes,
             "catalyst": cat_notes,
             "relative_strength": rs_notes,
+            "smart_money": sm_notes,
             "macro": macro_notes,
             "sentiment": sent_notes,
         },

@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from data_pull import pull_all
+from parlay import build_parlay_ladder, profit_outlook_for
 from score import score_setup
 from universe import ALL_TICKERS, SECTOR_MAP
 
@@ -69,12 +70,33 @@ def chart_payload(frame, days: int = CHART_DAYS) -> dict:
     return {"candles": candles, "ma20": ma20, "ma50": ma50}
 
 
+def _refresh_signal_caches() -> None:
+    """
+    Warm the daily caches (data/earnings_calendar.json, data/insider_filings.json).
+    Both modules enforce a 24h TTL, so a board build hits EDGAR / the earnings
+    feed at most once per ticker per day. Every failure degrades gracefully:
+    scoring falls back to neutral/baseline, never crashes, never zeroes out.
+    """
+    try:
+        from calendars.earnings import refresh_calendar
+        refresh_calendar()
+    except Exception as exc:
+        print(f"  ! earnings calendar refresh skipped ({exc!r}) — event layer degrades")
+    try:
+        from signals.insider import refresh_insider_filings
+        refresh_insider_filings()
+    except Exception as exc:
+        print(f"  ! insider filings refresh skipped ({exc!r}) — smart money degrades to 7/15")
+
+
 def generate() -> dict:
     data = pull_all()
     required = ("SPY", "^VIX", "^TNX")
     missing = [ticker for ticker in required if ticker not in data]
     if missing:
         raise RuntimeError(f"Missing required market context: {', '.join(missing)}")
+
+    _refresh_signal_caches()
 
     spy = data["SPY"]
     vix = latest_value(data["^VIX"])
@@ -83,11 +105,29 @@ def generate() -> dict:
     setups = []
     charts = {}
 
+    try:
+        from calendars.fomc import is_fomc_week
+        fomc_week = bool(is_fomc_week(as_of))
+    except Exception:
+        fomc_week = False
+
+    try:
+        from calendars.earnings import days_to_next_earnings
+    except Exception:
+        days_to_next_earnings = None
+
     for ticker in ALL_TICKERS:
         frame = data.get(ticker)
         if frame is None or frame.empty:
             continue
-        scored = score_setup(ticker, frame, spy, vix, tnx, as_of)
+        earnings_days = None
+        if days_to_next_earnings is not None:
+            try:
+                earnings_days = days_to_next_earnings(ticker, as_of)
+            except Exception:
+                earnings_days = None
+        scored = score_setup(ticker, frame, spy, vix, tnx, as_of,
+                             earnings_days=earnings_days, fomc_week=fomc_week)
         price = float(scored["price"])
         previous = float(frame["Close"].iloc[-2]) if len(frame) > 1 else price
         tier = scored["tier"]
@@ -101,15 +141,16 @@ def generate() -> dict:
             "target": round(price * 1.16, 2),
             "allocation_pct": 17 if tier == "LOCK" else 8.5 if tier == "LIVE" else 0,
             "breakout": breakout_read(frame),
+            "profit_outlook": profit_outlook_for(tier),
         })
         charts[ticker] = chart_payload(frame)
 
-    setups.sort(key=lambda item: item["score"], reverse=True)
+    setups.sort(key=lambda item: (-item["score"], item["ticker"]))
     snapshot = {
         "status": "model",
         "as_of": as_of.strftime("%Y-%m-%d"),
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
-        "integrity": "Phase 1 · partial",
+        "integrity": "v3 · smart money + catalyst wired",
         "context": {
             "regime": setups[0]["regime"] if setups else "UNKNOWN",
             "vix": round(vix, 2),
@@ -124,11 +165,13 @@ def generate() -> dict:
             "cash_floor_pct": 40,
         },
         "limitations": [
-            "Smart Money is a neutral placeholder until Form 4 and 13F feeds are wired.",
-            "Catalyst scoring is sector baseline only; verify earnings dates manually.",
+            "Smart Money uses SEC EDGAR Form 4 open-market activity; falls back to neutral 7/15 when EDGAR is unreachable.",
+            "Catalyst event layer uses cached earnings dates; beat detection is a price-reaction proxy (no EPS surprise feed).",
             "Prices are last available daily closes and may be delayed.",
+            "Parlay ladder is report-only — no parlay venue is connected.",
         ],
         "setups": setups,
+        "parlay_ladder": build_parlay_ladder(setups),
     }
     OUTPUT.write_text(json.dumps(snapshot, separators=(",", ":")), encoding="utf-8")
     # Charts payload is capped: top 100 by score plus every confirmed breakout,
