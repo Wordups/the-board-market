@@ -12,6 +12,8 @@ from universe import ALL_TICKERS, SECTOR_MAP
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "data" / "board_today.json"
+CHARTS_OUTPUT = ROOT / "data" / "charts_today.json"
+CHART_DAYS = 60
 
 # Windows' legacy console encoding cannot render symbols used by data_pull.py.
 # Replace only unsupported console glyphs; JSON output remains UTF-8.
@@ -21,6 +23,50 @@ if hasattr(sys.stdout, "reconfigure"):
 
 def latest_value(frame) -> float:
     return float(frame["Close"].iloc[-1])
+
+
+def breakout_read(frame) -> dict:
+    """20-day-high breakout setup: trigger level, distance, and volume-confirmed state.
+
+    Trigger uses the prior 20 sessions (excludes the latest bar) so a bar that
+    clears it counts as the breakout rather than raising its own trigger.
+    """
+    if len(frame) < 25:
+        return {"trigger": None, "pct_to_trigger": None, "vol_ratio": None, "confirmed": False}
+    prior = frame.iloc[-21:-1]
+    trigger = float(prior["High"].max())
+    close = float(frame["Close"].iloc[-1])
+    avg_vol = float(prior["Volume"].mean())
+    vol = float(frame["Volume"].iloc[-1])
+    vol_ratio = vol / avg_vol if avg_vol else 0.0
+    return {
+        "trigger": round(trigger, 2),
+        "pct_to_trigger": round((trigger / close - 1) * 100, 2) if close else None,
+        "vol_ratio": round(vol_ratio, 2),
+        "confirmed": bool(close > trigger and vol_ratio >= 1.5),
+    }
+
+
+def chart_payload(frame, days: int = CHART_DAYS) -> dict:
+    """Compact per-ticker chart data: [date, o, h, l, c, v] rows + aligned MAs."""
+    ma20_full = frame["Close"].rolling(20).mean()
+    ma50_full = frame["Close"].rolling(50).mean()
+    tail = frame.tail(days)
+    candles, ma20, ma50 = [], [], []
+    for idx, row in tail.iterrows():
+        candles.append([
+            idx.strftime("%Y-%m-%d"),
+            round(float(row["Open"]), 2),
+            round(float(row["High"]), 2),
+            round(float(row["Low"]), 2),
+            round(float(row["Close"]), 2),
+            int(row["Volume"]),
+        ])
+        m20 = ma20_full.loc[idx]
+        m50 = ma50_full.loc[idx]
+        ma20.append(round(float(m20), 2) if m20 == m20 else None)
+        ma50.append(round(float(m50), 2) if m50 == m50 else None)
+    return {"candles": candles, "ma20": ma20, "ma50": ma50}
 
 
 def generate() -> dict:
@@ -35,6 +81,7 @@ def generate() -> dict:
     tnx = latest_value(data["^TNX"])
     as_of = spy.index[-1].to_pydatetime()
     setups = []
+    charts = {}
 
     for ticker in ALL_TICKERS:
         frame = data.get(ticker)
@@ -53,7 +100,9 @@ def generate() -> dict:
             "stop": round(price * 0.92, 2),
             "target": round(price * 1.16, 2),
             "allocation_pct": 17 if tier == "LOCK" else 8.5 if tier == "LIVE" else 0,
+            "breakout": breakout_read(frame),
         })
+        charts[ticker] = chart_payload(frame)
 
     setups.sort(key=lambda item: item["score"], reverse=True)
     snapshot = {
@@ -82,6 +131,11 @@ def generate() -> dict:
         "setups": setups,
     }
     OUTPUT.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    CHARTS_OUTPUT.write_text(
+        json.dumps({"as_of": snapshot["as_of"], "days": CHART_DAYS, "tickers": charts},
+                   separators=(",", ":")),
+        encoding="utf-8",
+    )
     return snapshot
 
 

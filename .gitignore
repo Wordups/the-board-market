@@ -12,6 +12,9 @@ data/insider_filings.json
 data/sec_company_tickers.json
 .state/
 _site/
+automation/ledger.jsonl
+automation/journal.md
+automation/LIVE_ENABLED
 _smoke_*.py
 *.log
 .vscode/

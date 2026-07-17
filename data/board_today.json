@@ -1,12 +1,12 @@
 {
   "status": "model",
-  "as_of": "2026-06-18",
-  "generated_at": "2026-06-19T09:18:35-04:00",
+  "as_of": "2026-07-16",
+  "generated_at": "2026-07-17T10:00:07-04:00",
   "integrity": "Phase 1 \u00b7 partial",
   "context": {
     "regime": "BULL",
-    "vix": 16.4,
-    "tnx": 4.49
+    "vix": 16.73,
+    "tnx": 4.57
   },
   "rules": {
     "lock_threshold": 85,
@@ -23,233 +23,17 @@
   ],
   "setups": [
     {
-      "ticker": "ARM",
-      "as_of": "2026-06-18",
-      "tier": "LIVE",
-      "score": 74,
-      "raw_score": 74,
-      "factors": {
-        "technical": 12,
-        "catalyst": 14,
-        "relative_strength": 15,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL",
-          "EXTENDED"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
-        ],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 439.4599914550781,
-      "sector": "tech_growth",
-      "change_pct": 4.91,
-      "entry_low": 437.26,
-      "entry_high": 441.66,
-      "stop": 404.3,
-      "target": 509.77,
-      "allocation_pct": 8.5
-    },
-    {
-      "ticker": "AMD",
-      "as_of": "2026-06-18",
-      "tier": "LIVE",
-      "score": 73,
-      "raw_score": 73,
-      "factors": {
-        "technical": 11,
-        "catalyst": 14,
-        "relative_strength": 15,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
-        ],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 537.3699951171875,
-      "sector": "tech_growth",
-      "change_pct": 4.86,
-      "entry_low": 534.68,
-      "entry_high": 540.06,
-      "stop": 494.38,
-      "target": 623.35,
-      "allocation_pct": 8.5
-    },
-    {
-      "ticker": "MU",
-      "as_of": "2026-06-18",
-      "tier": "LIVE",
-      "score": 71,
-      "raw_score": 71,
-      "factors": {
-        "technical": 9,
-        "catalyst": 14,
-        "relative_strength": 15,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL",
-          "EXTENDED"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
-        ],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 1133.989990234375,
-      "sector": "tech_growth",
-      "change_pct": 8.7,
-      "entry_low": 1128.32,
-      "entry_high": 1139.66,
-      "stop": 1043.27,
-      "target": 1315.43,
-      "allocation_pct": 8.5
-    },
-    {
-      "ticker": "ANET",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 70,
-      "raw_score": 70,
-      "factors": {
-        "technical": 8,
-        "catalyst": 14,
-        "relative_strength": 15,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
-        ],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 169.6699981689453,
-      "sector": "tech_growth",
-      "change_pct": 2.87,
-      "entry_low": 168.82,
-      "entry_high": 170.52,
-      "stop": 156.1,
-      "target": 196.82,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "PANW",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 67,
-      "raw_score": 67,
-      "factors": {
-        "technical": 8,
-        "catalyst": 14,
-        "relative_strength": 12,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [
-          "RS20_STRONG"
-        ],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 287.7799987792969,
-      "sector": "tech_growth",
-      "change_pct": 2.0,
-      "entry_low": 286.34,
-      "entry_high": 289.22,
-      "stop": 264.76,
-      "target": 333.82,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XLK",
-      "as_of": "2026-06-18",
+      "ticker": "GS",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 64,
       "raw_score": 64,
       "factors": {
-        "technical": 14,
-        "catalyst": 8,
-        "relative_strength": 15,
+        "technical": 17,
+        "catalyst": 10,
+        "relative_strength": 9,
         "smart_money": 7,
-        "macro": 7,
+        "macro": 8,
         "sentiment": 13
       },
       "flags": [],
@@ -259,115 +43,473 @@
           "NEAR_20MA"
         ],
         "catalyst": [
-          "SECTOR_BASE_etf_sector"
+          "SECTOR_BASE_financials"
         ],
         "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
+          "RS5_STRONG"
         ],
-        "macro": [],
+        "macro": [
+          "HIGH_YIELDS_BANKS"
+        ],
         "sentiment": [
           "RSI_HEALTHY_BULL"
         ]
       },
       "regime": "BULL",
-      "price": 191.44000244140625,
-      "sector": "etf_sector",
-      "change_pct": 3.04,
-      "entry_low": 190.48,
-      "entry_high": 192.4,
-      "stop": 176.12,
-      "target": 222.07,
-      "allocation_pct": 0
+      "price": 1095.4599609375,
+      "sector": "financials",
+      "change_pct": -4.91,
+      "entry_low": 1089.98,
+      "entry_high": 1100.94,
+      "stop": 1007.82,
+      "target": 1270.73,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 1153.99,
+        "pct_to_trigger": 5.34,
+        "vol_ratio": 1.14,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "GS",
-      "as_of": "2026-06-18",
+      "ticker": "PANW",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 63,
       "raw_score": 63,
       "factors": {
-        "technical": 11,
-        "catalyst": 10,
+        "technical": 8,
+        "catalyst": 14,
         "relative_strength": 15,
         "smart_money": 7,
-        "macro": 7,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_financials"
-        ],
-        "relative_strength": [
-          "RS5_STRONG",
-          "RS20_STRONG"
-        ],
-        "macro": [],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 1096.56005859375,
-      "sector": "financials",
-      "change_pct": -0.23,
-      "entry_low": 1091.08,
-      "entry_high": 1102.04,
-      "stop": 1008.84,
-      "target": 1272.01,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "JPM",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 61,
-      "raw_score": 61,
-      "factors": {
-        "technical": 17,
-        "catalyst": 10,
-        "relative_strength": 12,
-        "smart_money": 7,
-        "macro": 7,
+        "macro": 11,
         "sentiment": 8
       },
       "flags": [],
       "notes": {
         "technical": [
+          "STACKED_BULL"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
+        ],
+        "relative_strength": [
+          "RS5_STRONG",
+          "RS20_STRONG"
+        ],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 353.989990234375,
+      "sector": "tech_growth",
+      "change_pct": -0.01,
+      "entry_low": 352.22,
+      "entry_high": 355.76,
+      "stop": 325.67,
+      "target": 410.63,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 368.17,
+        "pct_to_trigger": 4.01,
+        "vol_ratio": 0.79,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "META",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 62,
+      "raw_score": 62,
+      "factors": {
+        "technical": 7,
+        "catalyst": 12,
+        "relative_strength": 15,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 8
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "EXTENDED"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [
+          "RS5_STRONG",
+          "RS20_STRONG"
+        ],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 664.5399780273438,
+      "sector": "tech_mega",
+      "change_pct": -2.46,
+      "entry_low": 661.22,
+      "entry_high": 667.86,
+      "stop": 611.38,
+      "target": 770.87,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 686.08,
+        "pct_to_trigger": 3.24,
+        "vol_ratio": 0.77,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "JPM",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 61,
+      "raw_score": 61,
+      "factors": {
+        "technical": 14,
+        "catalyst": 10,
+        "relative_strength": 9,
+        "smart_money": 7,
+        "macro": 8,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
           "STACKED_BULL",
           "NEAR_20MA"
         ],
         "catalyst": [
           "SECTOR_BASE_financials"
         ],
+        "relative_strength": [],
+        "macro": [
+          "HIGH_YIELDS_BANKS"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 343.1499938964844,
+      "sector": "financials",
+      "change_pct": -1.08,
+      "entry_low": 341.43,
+      "entry_high": 344.87,
+      "stop": 315.7,
+      "target": 398.05,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 351.24,
+        "pct_to_trigger": 2.36,
+        "vol_ratio": 1.1,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "CRWD",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 60,
+      "raw_score": 60,
+      "factors": {
+        "technical": 8,
+        "catalyst": 14,
+        "relative_strength": 12,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 8
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
+        ],
         "relative_strength": [
           "RS20_STRONG"
         ],
-        "macro": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
         "sentiment": []
       },
       "regime": "BULL",
-      "price": 325.2200012207031,
-      "sector": "financials",
-      "change_pct": -2.47,
-      "entry_low": 323.59,
-      "entry_high": 326.85,
-      "stop": 299.2,
-      "target": 377.26,
-      "allocation_pct": 0
+      "price": 203.75999450683594,
+      "sector": "tech_growth",
+      "change_pct": -1.46,
+      "entry_low": 202.74,
+      "entry_high": 204.78,
+      "stop": 187.46,
+      "target": 236.36,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 217.5,
+        "pct_to_trigger": 6.74,
+        "vol_ratio": 0.7,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "XLI",
-      "as_of": "2026-06-18",
+      "ticker": "AAPL",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 61,
-      "raw_score": 61,
+      "score": 59,
+      "raw_score": 59,
       "factors": {
-        "technical": 17,
+        "technical": 8,
+        "catalyst": 12,
+        "relative_strength": 15,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 4
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [
+          "RS5_STRONG",
+          "RS20_STRONG"
+        ],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 333.260009765625,
+      "sector": "tech_mega",
+      "change_pct": 1.76,
+      "entry_low": 331.59,
+      "entry_high": 334.93,
+      "stop": 306.6,
+      "target": 386.58,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 328.73,
+        "pct_to_trigger": -1.36,
+        "vol_ratio": 0.96,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "COIN",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 59,
+      "raw_score": 59,
+      "factors": {
+        "technical": 9,
+        "catalyst": 15,
+        "relative_strength": 4,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_crypto"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 160.49000549316406,
+      "sector": "crypto",
+      "change_pct": -4.02,
+      "entry_low": 159.69,
+      "entry_high": 161.29,
+      "stop": 147.65,
+      "target": 186.17,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 176.48,
+        "pct_to_trigger": 9.96,
+        "vol_ratio": 0.82,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 58,
+      "raw_score": 58,
+      "factors": {
+        "technical": 9,
+        "catalyst": 12,
+        "relative_strength": 4,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 207.39999389648438,
+      "sector": "tech_mega",
+      "change_pct": -2.4,
+      "entry_low": 206.36,
+      "entry_high": 208.44,
+      "stop": 190.81,
+      "target": 240.58,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 213.99,
+        "pct_to_trigger": 3.18,
+        "vol_ratio": 0.85,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "COST",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 58,
+      "raw_score": 58,
+      "factors": {
+        "technical": 9,
+        "catalyst": 9,
+        "relative_strength": 7,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_consumer"
+        ],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 945.5700073242188,
+      "sector": "consumer",
+      "change_pct": 3.17,
+      "entry_low": 940.84,
+      "entry_high": 950.3,
+      "stop": 869.92,
+      "target": 1096.86,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 995.38,
+        "pct_to_trigger": 5.27,
+        "vol_ratio": 0.99,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "ANET",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 58,
+      "raw_score": 58,
+      "factors": {
+        "technical": 11,
+        "catalyst": 14,
+        "relative_strength": 2,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 168.55999755859375,
+      "sector": "tech_growth",
+      "change_pct": -1.95,
+      "entry_low": 167.72,
+      "entry_high": 169.4,
+      "stop": 155.08,
+      "target": 195.53,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 189.82,
+        "pct_to_trigger": 12.61,
+        "vol_ratio": 0.95,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XLP",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 58,
+      "raw_score": 58,
+      "factors": {
+        "technical": 14,
         "catalyst": 8,
         "relative_strength": 9,
         "smart_money": 7,
@@ -383,40 +525,95 @@
         "catalyst": [
           "SECTOR_BASE_etf_sector"
         ],
-        "relative_strength": [],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
         "macro": [],
         "sentiment": [
           "RSI_HEALTHY_BULL"
         ]
       },
       "regime": "BULL",
-      "price": 180.91000366210935,
+      "price": 85.80999755859375,
       "sector": "etf_sector",
-      "change_pct": 0.73,
-      "entry_low": 180.01,
-      "entry_high": 181.81,
-      "stop": 166.44,
-      "target": 209.86,
-      "allocation_pct": 0
+      "change_pct": 2.8,
+      "entry_low": 85.38,
+      "entry_high": 86.24,
+      "stop": 78.95,
+      "target": 99.54,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 85.96,
+        "pct_to_trigger": 0.17,
+        "vol_ratio": 1.05,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "CRWD",
-      "as_of": "2026-06-18",
+      "ticker": "XLV",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 60,
-      "raw_score": 60,
+      "score": 57,
+      "raw_score": 57,
       "factors": {
-        "technical": 11,
+        "technical": 14,
+        "catalyst": 8,
+        "relative_strength": 8,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [
+          "RS20_STRONG"
+        ],
+        "macro": [],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 161.8000030517578,
+      "sector": "etf_sector",
+      "change_pct": 2.22,
+      "entry_low": 160.99,
+      "entry_high": 162.61,
+      "stop": 148.86,
+      "target": 187.69,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 165.61,
+        "pct_to_trigger": 2.35,
+        "vol_ratio": 1.06,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "NOW",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 56,
+      "raw_score": 56,
+      "factors": {
+        "technical": 9,
         "catalyst": 14,
         "relative_strength": 5,
         "smart_money": 7,
-        "macro": 13,
+        "macro": 11,
         "sentiment": 10
       },
       "flags": [],
       "notes": {
         "technical": [
-          "BULL_TREND",
+          "MIXED_TREND",
           "NEAR_20MA"
         ],
         "catalyst": [
@@ -424,32 +621,131 @@
         ],
         "relative_strength": [],
         "macro": [
-          "REGIME_FIT_BULL"
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
         ],
         "sentiment": [
-          "RSI_REVERSAL_ZONE"
+          "VOL_CONTRACTION"
         ]
       },
       "regime": "BULL",
-      "price": 684.8599853515625,
+      "price": 104.01000213623047,
       "sector": "tech_growth",
-      "change_pct": 0.28,
-      "entry_low": 681.44,
-      "entry_high": 688.28,
-      "stop": 630.07,
-      "target": 794.44,
-      "allocation_pct": 0
+      "change_pct": -0.69,
+      "entry_low": 103.49,
+      "entry_high": 104.53,
+      "stop": 95.69,
+      "target": 120.65,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 113.79,
+        "pct_to_trigger": 9.4,
+        "vol_ratio": 0.93,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XOM",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 56,
+      "raw_score": 56,
+      "factors": {
+        "technical": 9,
+        "catalyst": 13,
+        "relative_strength": 12,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 8
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_energy"
+        ],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
+        "macro": [],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 145.9499969482422,
+      "sector": "energy",
+      "change_pct": 1.0,
+      "entry_low": 145.22,
+      "entry_high": 146.68,
+      "stop": 134.27,
+      "target": 169.3,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 146.0,
+        "pct_to_trigger": 0.03,
+        "vol_ratio": 0.77,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 54,
+      "raw_score": 54,
+      "factors": {
+        "technical": 9,
+        "catalyst": 12,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 354.4599914550781,
+      "sector": "tech_mega",
+      "change_pct": -4.44,
+      "entry_low": 352.69,
+      "entry_high": 356.23,
+      "stop": 326.1,
+      "target": 411.17,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 376.0,
+        "pct_to_trigger": 6.08,
+        "vol_ratio": 1.2,
+        "confirmed": false
+      }
     },
     {
       "ticker": "RTX",
-      "as_of": "2026-06-18",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 60,
-      "raw_score": 60,
+      "score": 54,
+      "raw_score": 54,
       "factors": {
-        "technical": 12,
+        "technical": 9,
         "catalyst": 13,
-        "relative_strength": 8,
+        "relative_strength": 5,
         "smart_money": 7,
         "macro": 7,
         "sentiment": 13
@@ -463,197 +759,87 @@
         "catalyst": [
           "SECTOR_BASE_defense"
         ],
-        "relative_strength": [
-          "RS20_STRONG"
-        ],
+        "relative_strength": [],
         "macro": [],
         "sentiment": [
           "RSI_HEALTHY_BULL"
         ]
       },
       "regime": "BULL",
-      "price": 185.6000061035156,
+      "price": 194.36000061035156,
       "sector": "defense",
-      "change_pct": -3.62,
-      "entry_low": 184.67,
-      "entry_high": 186.53,
-      "stop": 170.75,
-      "target": 215.3,
-      "allocation_pct": 0
+      "change_pct": -0.78,
+      "entry_low": 193.39,
+      "entry_high": 195.33,
+      "stop": 178.81,
+      "target": 225.46,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 203.94,
+        "pct_to_trigger": 4.93,
+        "vol_ratio": 0.76,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "QQQ",
-      "as_of": "2026-06-18",
+      "ticker": "IBIT",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 59,
-      "raw_score": 59,
+      "score": 54,
+      "raw_score": 54,
       "factors": {
-        "technical": 17,
-        "catalyst": 6,
-        "relative_strength": 9,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_macro"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 740.6199951171875,
-      "sector": "etf_macro",
-      "change_pct": 2.51,
-      "entry_low": 736.92,
-      "entry_high": 744.32,
-      "stop": 681.37,
-      "target": 859.12,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "NVDA",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 57,
-      "raw_score": 57,
-      "factors": {
-        "technical": 11,
-        "catalyst": 12,
+        "technical": 9,
+        "catalyst": 15,
         "relative_strength": 4,
         "smart_money": 7,
-        "macro": 13,
-        "sentiment": 10
+        "macro": 11,
+        "sentiment": 8
       },
       "flags": [],
       "notes": {
         "technical": [
-          "BULL_TREND",
+          "MIXED_TREND",
           "NEAR_20MA"
         ],
         "catalyst": [
-          "SECTOR_BASE_tech_mega"
+          "SECTOR_BASE_crypto"
         ],
         "relative_strength": [],
         "macro": [
-          "REGIME_FIT_BULL"
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
         ],
-        "sentiment": [
-          "RSI_REVERSAL_ZONE"
-        ]
+        "sentiment": []
       },
       "regime": "BULL",
-      "price": 210.69000244140625,
-      "sector": "tech_mega",
-      "change_pct": 2.95,
-      "entry_low": 209.64,
-      "entry_high": 211.74,
-      "stop": 193.83,
-      "target": 244.4,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "GOOGL",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 57,
-      "raw_score": 57,
-      "factors": {
-        "technical": 11,
-        "catalyst": 12,
-        "relative_strength": 4,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 10
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "BULL_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_mega"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_REVERSAL_ZONE"
-        ]
-      },
-      "regime": "BULL",
-      "price": 368.0299987792969,
-      "sector": "tech_mega",
-      "change_pct": 1.17,
-      "entry_low": 366.19,
-      "entry_high": 369.87,
-      "stop": 338.59,
-      "target": 426.91,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "IWM",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 57,
-      "raw_score": 57,
-      "factors": {
-        "technical": 17,
-        "catalyst": 6,
-        "relative_strength": 7,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BULL",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_macro"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 295.5899963378906,
-      "sector": "etf_macro",
-      "change_pct": 1.97,
-      "entry_low": 294.11,
-      "entry_high": 297.07,
-      "stop": 271.94,
-      "target": 342.88,
-      "allocation_pct": 0
+      "price": 36.38999938964844,
+      "sector": "crypto",
+      "change_pct": -1.14,
+      "entry_low": 36.21,
+      "entry_high": 36.57,
+      "stop": 33.48,
+      "target": 42.21,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 37.61,
+        "pct_to_trigger": 3.35,
+        "vol_ratio": 0.48,
+        "confirmed": false
+      }
     },
     {
       "ticker": "LLY",
-      "as_of": "2026-06-18",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 53,
       "raw_score": 53,
       "factors": {
         "technical": 11,
         "catalyst": 10,
-        "relative_strength": 8,
+        "relative_strength": 5,
         "smart_money": 7,
         "macro": 7,
-        "sentiment": 10
+        "sentiment": 13
       },
       "flags": [],
       "notes": {
@@ -664,33 +850,37 @@
         "catalyst": [
           "SECTOR_BASE_healthcare"
         ],
-        "relative_strength": [
-          "RS20_STRONG"
-        ],
+        "relative_strength": [],
         "macro": [],
         "sentiment": [
-          "RSI_REVERSAL_ZONE"
+          "RSI_HEALTHY_BULL"
         ]
       },
       "regime": "BULL",
-      "price": 1098.5699462890625,
+      "price": 1169.1700439453125,
       "sector": "healthcare",
-      "change_pct": -1.21,
-      "entry_low": 1093.08,
-      "entry_high": 1104.06,
-      "stop": 1010.68,
-      "target": 1274.34,
-      "allocation_pct": 0
+      "change_pct": 1.08,
+      "entry_low": 1163.32,
+      "entry_high": 1175.02,
+      "stop": 1075.64,
+      "target": 1356.24,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 1249.45,
+        "pct_to_trigger": 6.87,
+        "vol_ratio": 0.91,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "V",
-      "as_of": "2026-06-18",
+      "ticker": "OXY",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 53,
       "raw_score": 53,
       "factors": {
-        "technical": 12,
-        "catalyst": 10,
+        "technical": 9,
+        "catalyst": 13,
         "relative_strength": 4,
         "smart_money": 7,
         "macro": 7,
@@ -703,7 +893,7 @@
           "NEAR_20MA"
         ],
         "catalyst": [
-          "SECTOR_BASE_financials"
+          "SECTOR_BASE_energy"
         ],
         "relative_strength": [],
         "macro": [],
@@ -712,28 +902,357 @@
         ]
       },
       "regime": "BULL",
-      "price": 327.239990234375,
-      "sector": "financials",
-      "change_pct": -0.95,
-      "entry_low": 325.6,
-      "entry_high": 328.88,
-      "stop": 301.06,
-      "target": 379.6,
-      "allocation_pct": 0
+      "price": 53.650001525878906,
+      "sector": "energy",
+      "change_pct": -0.22,
+      "entry_low": 53.38,
+      "entry_high": 53.92,
+      "stop": 49.36,
+      "target": 62.23,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 55.49,
+        "pct_to_trigger": 3.43,
+        "vol_ratio": 0.64,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "TLT",
-      "as_of": "2026-06-18",
+      "ticker": "XLE",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 53,
+      "raw_score": 53,
+      "factors": {
+        "technical": 11,
+        "catalyst": 8,
+        "relative_strength": 12,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 8
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
+        "macro": [],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 57.02000045776367,
+      "sector": "etf_sector",
+      "change_pct": 0.92,
+      "entry_low": 56.73,
+      "entry_high": 57.31,
+      "stop": 52.46,
+      "target": 66.14,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 57.22,
+        "pct_to_trigger": 0.35,
+        "vol_ratio": 0.84,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "V",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 52,
       "raw_score": 52,
       "factors": {
-        "technical": 12,
-        "catalyst": 6,
-        "relative_strength": 5,
+        "technical": 8,
+        "catalyst": 10,
+        "relative_strength": 15,
+        "smart_money": 7,
+        "macro": 8,
+        "sentiment": 4
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_financials"
+        ],
+        "relative_strength": [
+          "RS5_STRONG",
+          "RS20_STRONG"
+        ],
+        "macro": [
+          "HIGH_YIELDS_BANKS"
+        ],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 365.1400146484375,
+      "sector": "financials",
+      "change_pct": 2.82,
+      "entry_low": 363.31,
+      "entry_high": 366.97,
+      "stop": 335.93,
+      "target": 423.56,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 365.02,
+        "pct_to_trigger": -0.03,
+        "vol_ratio": 0.92,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XLF",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 52,
+      "raw_score": 52,
+      "factors": {
+        "technical": 17,
+        "catalyst": 8,
+        "relative_strength": 9,
         "smart_money": 7,
         "macro": 7,
-        "sentiment": 15
+        "sentiment": 4
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 56.75,
+      "sector": "etf_sector",
+      "change_pct": 0.34,
+      "entry_low": 56.47,
+      "entry_high": 57.03,
+      "stop": 52.21,
+      "target": 65.83,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 56.82,
+        "pct_to_trigger": 0.12,
+        "vol_ratio": 0.78,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 51,
+      "raw_score": 51,
+      "factors": {
+        "technical": 6,
+        "catalyst": 12,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BEAR",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 391.05999755859375,
+      "sector": "tech_mega",
+      "change_pct": -0.86,
+      "entry_low": 389.1,
+      "entry_high": 393.02,
+      "stop": 359.78,
+      "target": 453.63,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 432.86,
+        "pct_to_trigger": 10.69,
+        "vol_ratio": 0.68,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XLU",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 50,
+      "raw_score": 50,
+      "factors": {
+        "technical": 14,
+        "catalyst": 8,
+        "relative_strength": 4,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 10
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_REVERSAL_ZONE"
+        ]
+      },
+      "regime": "BULL",
+      "price": 45.470001220703125,
+      "sector": "etf_sector",
+      "change_pct": 0.55,
+      "entry_low": 45.24,
+      "entry_high": 45.7,
+      "stop": 41.83,
+      "target": 52.75,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 46.32,
+        "pct_to_trigger": 1.87,
+        "vol_ratio": 0.77,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "CVX",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 49,
+      "raw_score": 49,
+      "factors": {
+        "technical": 5,
+        "catalyst": 13,
+        "relative_strength": 9,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 8
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_energy"
+        ],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
+        "macro": [],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 183.86000061035156,
+      "sector": "energy",
+      "change_pct": 1.24,
+      "entry_low": 182.94,
+      "entry_high": 184.78,
+      "stop": 169.15,
+      "target": 213.28,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 183.36,
+        "pct_to_trigger": -0.27,
+        "vol_ratio": 0.64,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "MSFT",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 48,
+      "raw_score": 48,
+      "factors": {
+        "technical": 3,
+        "catalyst": 12,
+        "relative_strength": 9,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 4
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_mega"
+        ],
+        "relative_strength": [
+          "RS5_STRONG"
+        ],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 401.1000061035156,
+      "sector": "tech_mega",
+      "change_pct": 1.38,
+      "entry_low": 399.09,
+      "entry_high": 403.11,
+      "stop": 369.01,
+      "target": 465.28,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 398.96,
+        "pct_to_trigger": -0.53,
+        "vol_ratio": 0.79,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 48,
+      "raw_score": 48,
+      "factors": {
+        "technical": 9,
+        "catalyst": 9,
+        "relative_strength": 6,
+        "smart_money": 7,
+        "macro": 13,
+        "sentiment": 4
       },
       "flags": [],
       "notes": {
@@ -742,35 +1261,456 @@
           "NEAR_20MA"
         ],
         "catalyst": [
+          "SECTOR_BASE_consumer"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL"
+        ],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 249.88999938964844,
+      "sector": "consumer",
+      "change_pct": -1.99,
+      "entry_low": 248.64,
+      "entry_high": 251.14,
+      "stop": 229.9,
+      "target": 289.87,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 256.48,
+        "pct_to_trigger": 2.64,
+        "vol_ratio": 0.74,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XLY",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 48,
+      "raw_score": 48,
+      "factors": {
+        "technical": 11,
+        "catalyst": 8,
+        "relative_strength": 2,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 117.33999633789062,
+      "sector": "etf_sector",
+      "change_pct": 0.29,
+      "entry_low": 116.75,
+      "entry_high": 117.93,
+      "stop": 107.95,
+      "target": 136.11,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 119.22,
+        "pct_to_trigger": 1.6,
+        "vol_ratio": 0.71,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "MSTR",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 48,
+      "raw_score": 48,
+      "factors": {
+        "technical": 0,
+        "catalyst": 15,
+        "relative_strength": 2,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BEAR"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_crypto"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 94.02999877929688,
+      "sector": "crypto",
+      "change_pct": -3.53,
+      "entry_low": 93.56,
+      "entry_high": 94.5,
+      "stop": 86.51,
+      "target": 109.07,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 131.7,
+        "pct_to_trigger": 40.06,
+        "vol_ratio": 0.42,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "AMD",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 47,
+      "raw_score": 47,
+      "factors": {
+        "technical": 5,
+        "catalyst": 14,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 10
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": [
+          "RSI_REVERSAL_ZONE"
+        ]
+      },
+      "regime": "BULL",
+      "price": 500.94000244140625,
+      "sector": "tech_growth",
+      "change_pct": -5.33,
+      "entry_low": 498.44,
+      "entry_high": 503.44,
+      "stop": 460.86,
+      "target": 581.09,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 584.73,
+        "pct_to_trigger": 16.73,
+        "vol_ratio": 0.93,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "MA",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 47,
+      "raw_score": 47,
+      "factors": {
+        "technical": 3,
+        "catalyst": 10,
+        "relative_strength": 15,
+        "smart_money": 7,
+        "macro": 8,
+        "sentiment": 4
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_financials"
+        ],
+        "relative_strength": [
+          "RS5_STRONG",
+          "RS20_STRONG"
+        ],
+        "macro": [
+          "HIGH_YIELDS_BANKS"
+        ],
+        "sentiment": [
+          "RSI_OVERBOUGHT"
+        ]
+      },
+      "regime": "BULL",
+      "price": 551.5399780273438,
+      "sector": "financials",
+      "change_pct": 3.05,
+      "entry_low": 548.78,
+      "entry_high": 554.3,
+      "stop": 507.42,
+      "target": 639.79,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 543.46,
+        "pct_to_trigger": -1.46,
+        "vol_ratio": 0.74,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "SPY",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 47,
+      "raw_score": 47,
+      "factors": {
+        "technical": 14,
+        "catalyst": 6,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BULL",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
           "SECTOR_BASE_etf_macro"
         ],
         "relative_strength": [],
         "macro": [],
         "sentiment": [
-          "RSI_HEALTHY_BULL",
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 750.719970703125,
+      "sector": "etf_macro",
+      "change_pct": -0.54,
+      "entry_low": 746.97,
+      "entry_high": 754.47,
+      "stop": 690.66,
+      "target": 870.84,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 755.58,
+        "pct_to_trigger": 0.65,
+        "vol_ratio": 0.85,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "SLB",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 46,
+      "raw_score": 46,
+      "factors": {
+        "technical": 9,
+        "catalyst": 13,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 10
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_energy"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_REVERSAL_ZONE"
+        ]
+      },
+      "regime": "BULL",
+      "price": 47.08000183105469,
+      "sector": "energy",
+      "change_pct": -0.99,
+      "entry_low": 46.84,
+      "entry_high": 47.32,
+      "stop": 43.31,
+      "target": 54.61,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 54.37,
+        "pct_to_trigger": 15.48,
+        "vol_ratio": 0.4,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "LMT",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 46,
+      "raw_score": 46,
+      "factors": {
+        "technical": 6,
+        "catalyst": 13,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BEAR",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_defense"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 513.52001953125,
+      "sector": "defense",
+      "change_pct": -0.18,
+      "entry_low": 510.95,
+      "entry_high": 516.09,
+      "stop": 472.44,
+      "target": 595.68,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 547.47,
+        "pct_to_trigger": 6.61,
+        "vol_ratio": 0.58,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "NOC",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 46,
+      "raw_score": 46,
+      "factors": {
+        "technical": 6,
+        "catalyst": 13,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 13
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BEAR",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_defense"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_HEALTHY_BULL"
+        ]
+      },
+      "regime": "BULL",
+      "price": 518.6500244140625,
+      "sector": "defense",
+      "change_pct": -1.25,
+      "entry_low": 516.06,
+      "entry_high": 521.24,
+      "stop": 477.16,
+      "target": 601.63,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 558.8,
+        "pct_to_trigger": 7.74,
+        "vol_ratio": 1.23,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "IWM",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 45,
+      "raw_score": 45,
+      "factors": {
+        "technical": 11,
+        "catalyst": 6,
+        "relative_strength": 2,
+        "smart_money": 7,
+        "macro": 7,
+        "sentiment": 12
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "BULL_TREND",
+          "NEAR_20MA"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_etf_macro"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": [
+          "RSI_REVERSAL_ZONE",
           "VOL_CONTRACTION"
         ]
       },
       "regime": "BULL",
-      "price": 86.75,
+      "price": 295.5899963378906,
       "sector": "etf_macro",
-      "change_pct": 0.49,
-      "entry_low": 86.32,
-      "entry_high": 87.18,
-      "stop": 79.81,
-      "target": 100.63,
-      "allocation_pct": 0
+      "change_pct": -0.06,
+      "entry_low": 294.11,
+      "entry_high": 297.07,
+      "stop": 271.94,
+      "target": 342.88,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 302.72,
+        "pct_to_trigger": 2.41,
+        "vol_ratio": 1.0,
+        "confirmed": false
+      }
     },
     {
       "ticker": "AVGO",
-      "as_of": "2026-06-18",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 51,
-      "raw_score": 51,
+      "score": 41,
+      "raw_score": 41,
       "factors": {
-        "technical": 12,
+        "technical": 9,
         "catalyst": 8,
-        "relative_strength": 7,
+        "relative_strength": 0,
         "smart_money": 7,
         "macro": 7,
         "sentiment": 10
@@ -784,36 +1724,40 @@
         "catalyst": [
           "SECTOR_BASE_unknown"
         ],
-        "relative_strength": [
-          "RS5_STRONG"
-        ],
+        "relative_strength": [],
         "macro": [],
         "sentiment": [
           "RSI_REVERSAL_ZONE"
         ]
       },
       "regime": "BULL",
-      "price": 411.3500061035156,
+      "price": 374.45001220703125,
       "sector": "unclassified",
-      "change_pct": 4.7,
-      "entry_low": 409.29,
-      "entry_high": 413.41,
-      "stop": 378.44,
-      "target": 477.17,
-      "allocation_pct": 0
+      "change_pct": -5.03,
+      "entry_low": 372.58,
+      "entry_high": 376.32,
+      "stop": 344.49,
+      "target": 434.36,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 414.64,
+        "pct_to_trigger": 10.73,
+        "vol_ratio": 0.85,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "AAPL",
-      "as_of": "2026-06-18",
+      "ticker": "XLI",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 49,
-      "raw_score": 49,
+      "score": 41,
+      "raw_score": 41,
       "factors": {
         "technical": 11,
-        "catalyst": 12,
-        "relative_strength": 0,
+        "catalyst": 8,
+        "relative_strength": 2,
         "smart_money": 7,
-        "macro": 13,
+        "macro": 7,
         "sentiment": 6
       },
       "flags": [],
@@ -823,188 +1767,83 @@
           "NEAR_20MA"
         ],
         "catalyst": [
-          "SECTOR_BASE_tech_mega"
+          "SECTOR_BASE_etf_sector"
+        ],
+        "relative_strength": [],
+        "macro": [],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 180.14999389648438,
+      "sector": "etf_sector",
+      "change_pct": 0.05,
+      "entry_low": 179.25,
+      "entry_high": 181.05,
+      "stop": 165.74,
+      "target": 208.97,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 186.45,
+        "pct_to_trigger": 3.5,
+        "vol_ratio": 0.82,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "ARM",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 40,
+      "raw_score": 40,
+      "factors": {
+        "technical": 3,
+        "catalyst": 14,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 5
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "MIXED_TREND"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
         ],
         "relative_strength": [],
         "macro": [
-          "REGIME_FIT_BULL"
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
         ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 298.010009765625,
-      "sector": "tech_mega",
-      "change_pct": 0.7,
-      "entry_low": 296.52,
-      "entry_high": 299.5,
-      "stop": 274.17,
-      "target": 345.69,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "LMT",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 49,
-      "raw_score": 49,
-      "factors": {
-        "technical": 12,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 10
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_defense"
-        ],
-        "relative_strength": [],
-        "macro": [],
         "sentiment": [
-          "RSI_REVERSAL_ZONE"
+          "VOL_CONTRACTION"
         ]
       },
       "regime": "BULL",
-      "price": 510.9500122070313,
-      "sector": "defense",
-      "change_pct": -4.01,
-      "entry_low": 508.4,
-      "entry_high": 513.5,
-      "stop": 470.07,
-      "target": 592.7,
-      "allocation_pct": 0
+      "price": 262.010009765625,
+      "sector": "tech_growth",
+      "change_pct": -5.41,
+      "entry_low": 260.7,
+      "entry_high": 263.32,
+      "stop": 241.05,
+      "target": 303.93,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 452.7,
+        "pct_to_trigger": 72.78,
+        "vol_ratio": 1.09,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "XLF",
-      "as_of": "2026-06-18",
+      "ticker": "QQQ",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 49,
-      "raw_score": 49,
-      "factors": {
-        "technical": 12,
-        "catalyst": 8,
-        "relative_strength": 7,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 8
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_sector"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 53.56999969482422,
-      "sector": "etf_sector",
-      "change_pct": -0.89,
-      "entry_low": 53.3,
-      "entry_high": 53.84,
-      "stop": 49.28,
-      "target": 62.14,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XLU",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 49,
-      "raw_score": 49,
-      "factors": {
-        "technical": 12,
-        "catalyst": 8,
-        "relative_strength": 2,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_sector"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 44.7599983215332,
-      "sector": "etf_sector",
-      "change_pct": 0.67,
-      "entry_low": 44.54,
-      "entry_high": 44.98,
-      "stop": 41.18,
-      "target": 51.92,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "COST",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 48,
-      "raw_score": 48,
+      "score": 39,
+      "raw_score": 39,
       "factors": {
         "technical": 9,
-        "catalyst": 9,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 10
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_consumer"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": [
-          "RSI_REVERSAL_ZONE"
-        ]
-      },
-      "regime": "BULL",
-      "price": 951.4500122070312,
-      "sector": "consumer",
-      "change_pct": -1.46,
-      "entry_low": 946.69,
-      "entry_high": 956.21,
-      "stop": 875.33,
-      "target": 1103.68,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "SPY",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 47,
-      "raw_score": 47,
-      "factors": {
-        "technical": 17,
         "catalyst": 6,
         "relative_strength": 0,
         "smart_money": 7,
@@ -1014,7 +1853,7 @@
       "flags": [],
       "notes": {
         "technical": [
-          "STACKED_BULL",
+          "MIXED_TREND",
           "NEAR_20MA"
         ],
         "catalyst": [
@@ -1027,144 +1866,34 @@
         ]
       },
       "regime": "BULL",
-      "price": 746.739990234375,
+      "price": 705.9400024414062,
       "sector": "etf_macro",
-      "change_pct": 1.04,
-      "entry_low": 743.01,
-      "entry_high": 750.47,
-      "stop": 687.0,
-      "target": 866.22,
-      "allocation_pct": 0
+      "change_pct": -1.64,
+      "entry_low": 702.41,
+      "entry_high": 709.47,
+      "stop": 649.46,
+      "target": 818.89,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 745.45,
+        "pct_to_trigger": 5.6,
+        "vol_ratio": 0.93,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "TSLA",
-      "as_of": "2026-06-18",
+      "ticker": "MU",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 44,
-      "raw_score": 44,
-      "factors": {
-        "technical": 6,
-        "catalyst": 12,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_mega"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 400.489990234375,
-      "sector": "tech_mega",
-      "change_pct": 1.04,
-      "entry_low": 398.49,
-      "entry_high": 402.49,
-      "stop": 368.45,
-      "target": 464.57,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XLP",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 44,
-      "raw_score": 44,
-      "factors": {
-        "technical": 9,
-        "catalyst": 8,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 13
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_sector"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "RSI_HEALTHY_BULL"
-        ]
-      },
-      "regime": "BULL",
-      "price": 83.30000305175781,
-      "sector": "etf_sector",
-      "change_pct": -0.45,
-      "entry_low": 82.88,
-      "entry_high": 83.72,
-      "stop": 76.64,
-      "target": 96.63,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XLY",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 44,
-      "raw_score": 44,
-      "factors": {
-        "technical": 12,
-        "catalyst": 8,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 10
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_sector"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "RSI_REVERSAL_ZONE"
-        ]
-      },
-      "regime": "BULL",
-      "price": 117.16000366210938,
-      "sector": "etf_sector",
-      "change_pct": 1.45,
-      "entry_low": 116.57,
-      "entry_high": 117.75,
-      "stop": 107.79,
-      "target": 135.91,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "SMCI",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 43,
-      "raw_score": 43,
+      "score": 38,
+      "raw_score": 38,
       "factors": {
         "technical": 3,
         "catalyst": 14,
         "relative_strength": 0,
         "smart_money": 7,
-        "macro": 13,
-        "sentiment": 6
+        "macro": 11,
+        "sentiment": 3
       },
       "flags": [],
       "notes": {
@@ -1176,29 +1905,36 @@
         ],
         "relative_strength": [],
         "macro": [
-          "REGIME_FIT_BULL"
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
         ],
         "sentiment": []
       },
       "regime": "BULL",
-      "price": 30.65999984741211,
+      "price": 853.2000122070312,
       "sector": "tech_growth",
-      "change_pct": 10.37,
-      "entry_low": 30.51,
-      "entry_high": 30.81,
-      "stop": 28.21,
-      "target": 35.57,
-      "allocation_pct": 0
+      "change_pct": -5.65,
+      "entry_low": 848.93,
+      "entry_high": 857.47,
+      "stop": 784.94,
+      "target": 989.71,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 1254.81,
+        "pct_to_trigger": 47.07,
+        "vol_ratio": 0.88,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "MA",
-      "as_of": "2026-06-18",
+      "ticker": "GLD",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 43,
-      "raw_score": 43,
+      "score": 36,
+      "raw_score": 36,
       "factors": {
-        "technical": 9,
-        "catalyst": 10,
+        "technical": 6,
+        "catalyst": 6,
         "relative_strength": 0,
         "smart_money": 7,
         "macro": 7,
@@ -1211,7 +1947,7 @@
           "NEAR_20MA"
         ],
         "catalyst": [
-          "SECTOR_BASE_financials"
+          "SECTOR_BASE_etf_macro"
         ],
         "relative_strength": [],
         "macro": [],
@@ -1220,25 +1956,76 @@
         ]
       },
       "regime": "BULL",
-      "price": 489.7900085449219,
-      "sector": "financials",
-      "change_pct": -0.65,
-      "entry_low": 487.34,
-      "entry_high": 492.24,
-      "stop": 450.61,
-      "target": 568.16,
-      "allocation_pct": 0
+      "price": 364.9599914550781,
+      "sector": "etf_macro",
+      "change_pct": -1.98,
+      "entry_low": 363.14,
+      "entry_high": 366.78,
+      "stop": 335.76,
+      "target": 423.35,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 402.04,
+        "pct_to_trigger": 10.16,
+        "vol_ratio": 1.21,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "XLV",
-      "as_of": "2026-06-18",
+      "ticker": "SMCI",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
-      "score": 43,
-      "raw_score": 43,
+      "score": 35,
+      "raw_score": 35,
       "factors": {
-        "technical": 9,
+        "technical": 0,
+        "catalyst": 14,
+        "relative_strength": 0,
+        "smart_money": 7,
+        "macro": 11,
+        "sentiment": 3
+      },
+      "flags": [],
+      "notes": {
+        "technical": [
+          "STACKED_BEAR"
+        ],
+        "catalyst": [
+          "SECTOR_BASE_tech_growth"
+        ],
+        "relative_strength": [],
+        "macro": [
+          "REGIME_FIT_BULL",
+          "HIGH_YIELDS_DRAG"
+        ],
+        "sentiment": []
+      },
+      "regime": "BULL",
+      "price": 24.68000030517578,
+      "sector": "tech_growth",
+      "change_pct": -8.22,
+      "entry_low": 24.56,
+      "entry_high": 24.8,
+      "stop": 22.71,
+      "target": 28.63,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 36.8,
+        "pct_to_trigger": 49.11,
+        "vol_ratio": 0.72,
+        "confirmed": false
+      }
+    },
+    {
+      "ticker": "XLK",
+      "as_of": "2026-07-16",
+      "tier": "BENCH",
+      "score": 35,
+      "raw_score": 35,
+      "factors": {
+        "technical": 3,
         "catalyst": 8,
-        "relative_strength": 2,
+        "relative_strength": 0,
         "smart_money": 7,
         "macro": 7,
         "sentiment": 10
@@ -1246,8 +2033,7 @@
       "flags": [],
       "notes": {
         "technical": [
-          "MIXED_TREND",
-          "NEAR_20MA"
+          "MIXED_TREND"
         ],
         "catalyst": [
           "SECTOR_BASE_etf_sector"
@@ -1259,519 +2045,40 @@
         ]
       },
       "regime": "BULL",
-      "price": 149.39999389648438,
+      "price": 177.52000427246094,
       "sector": "etf_sector",
-      "change_pct": -0.87,
-      "entry_low": 148.65,
-      "entry_high": 150.15,
-      "stop": 137.45,
-      "target": 173.3,
-      "allocation_pct": 0
+      "change_pct": -2.24,
+      "entry_low": 176.63,
+      "entry_high": 178.41,
+      "stop": 163.32,
+      "target": 205.92,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 194.3,
+        "pct_to_trigger": 9.45,
+        "vol_ratio": 0.79,
+        "confirmed": false
+      }
     },
     {
-      "ticker": "COIN",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 43,
-      "raw_score": 43,
-      "factors": {
-        "technical": 0,
-        "catalyst": 15,
-        "relative_strength": 2,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BEAR"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_crypto"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 163.25999450683594,
-      "sector": "crypto",
-      "change_pct": -1.01,
-      "entry_low": 162.44,
-      "entry_high": 164.08,
-      "stop": 150.2,
-      "target": 189.38,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XOM",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 42,
-      "raw_score": 42,
-      "factors": {
-        "technical": 9,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "VOL_EXPANSION"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_energy"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 137.80999755859375,
-      "sector": "energy",
-      "change_pct": -2.08,
-      "entry_low": 137.12,
-      "entry_high": 138.5,
-      "stop": 126.79,
-      "target": 159.86,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "SLB",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 42,
-      "raw_score": 42,
-      "factors": {
-        "technical": 9,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND",
-          "VOL_EXPANSION"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_energy"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 48.09000015258789,
-      "sector": "energy",
-      "change_pct": -4.45,
-      "entry_low": 47.85,
-      "entry_high": 48.33,
-      "stop": 44.24,
-      "target": 55.78,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "MSFT",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 41,
-      "raw_score": 41,
-      "factors": {
-        "technical": 6,
-        "catalyst": 12,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 3
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_mega"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 379.3999938964844,
-      "sector": "tech_mega",
-      "change_pct": 0.13,
-      "entry_low": 377.5,
-      "entry_high": 381.3,
-      "stop": 349.05,
-      "target": 440.1,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "AMZN",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 41,
-      "raw_score": 41,
-      "factors": {
-        "technical": 6,
-        "catalyst": 9,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_consumer"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 244.38999938964844,
-      "sector": "consumer",
-      "change_pct": 2.9,
-      "entry_low": 243.17,
-      "entry_high": 245.61,
-      "stop": 224.84,
-      "target": 283.49,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "OXY",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 41,
-      "raw_score": 41,
-      "factors": {
-        "technical": 6,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 8
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_energy"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": [
-          "VOL_CONTRACTION"
-        ]
-      },
-      "regime": "BULL",
-      "price": 51.81999969482422,
-      "sector": "energy",
-      "change_pct": -2.3,
-      "entry_low": 51.56,
-      "entry_high": 52.08,
-      "stop": 47.67,
-      "target": 60.11,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "MSTR",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 41,
-      "raw_score": 41,
-      "factors": {
-        "technical": 3,
-        "catalyst": 15,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 3
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BEAR"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_crypto"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 112.52999877929688,
-      "sector": "crypto",
-      "change_pct": -3.46,
-      "entry_low": 111.97,
-      "entry_high": 113.09,
-      "stop": 103.53,
-      "target": 130.53,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "META",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 40,
-      "raw_score": 40,
-      "factors": {
-        "technical": 0,
-        "catalyst": 12,
-        "relative_strength": 2,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BEAR"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_mega"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 577.219970703125,
-      "sector": "tech_mega",
-      "change_pct": 1.7,
-      "entry_low": 574.33,
-      "entry_high": 580.11,
-      "stop": 531.04,
-      "target": 669.58,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "NOW",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 40,
-      "raw_score": 40,
-      "factors": {
-        "technical": 3,
-        "catalyst": 14,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 3
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_tech_growth"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 95.04000091552734,
-      "sector": "tech_growth",
-      "change_pct": -0.46,
-      "entry_low": 94.56,
-      "entry_high": 95.52,
-      "stop": 87.44,
-      "target": 110.25,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "CVX",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 39,
-      "raw_score": 39,
-      "factors": {
-        "technical": 6,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_energy"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 173.6300048828125,
-      "sector": "energy",
-      "change_pct": -2.22,
-      "entry_low": 172.76,
-      "entry_high": 174.5,
-      "stop": 159.74,
-      "target": 201.41,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "IBIT",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 38,
-      "raw_score": 38,
-      "factors": {
-        "technical": 0,
-        "catalyst": 15,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 13,
-        "sentiment": 3
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BEAR"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_crypto"
-        ],
-        "relative_strength": [],
-        "macro": [
-          "REGIME_FIT_BULL"
-        ],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 35.619998931884766,
-      "sector": "crypto",
-      "change_pct": -2.04,
-      "entry_low": 35.44,
-      "entry_high": 35.8,
-      "stop": 32.77,
-      "target": 41.32,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "NOC",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 36,
-      "raw_score": 36,
-      "factors": {
-        "technical": 3,
-        "catalyst": 13,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "STACKED_BEAR"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_defense"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 521.5,
-      "sector": "defense",
-      "change_pct": -5.21,
-      "entry_low": 518.89,
-      "entry_high": 524.11,
-      "stop": 479.78,
-      "target": 604.94,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "XLE",
-      "as_of": "2026-06-18",
-      "tier": "BENCH",
-      "score": 34,
-      "raw_score": 34,
-      "factors": {
-        "technical": 6,
-        "catalyst": 8,
-        "relative_strength": 0,
-        "smart_money": 7,
-        "macro": 7,
-        "sentiment": 6
-      },
-      "flags": [],
-      "notes": {
-        "technical": [
-          "MIXED_TREND"
-        ],
-        "catalyst": [
-          "SECTOR_BASE_etf_sector"
-        ],
-        "relative_strength": [],
-        "macro": [],
-        "sentiment": []
-      },
-      "regime": "BULL",
-      "price": 53.77000045776367,
-      "sector": "etf_sector",
-      "change_pct": -1.65,
-      "entry_low": 53.5,
-      "entry_high": 54.04,
-      "stop": 49.47,
-      "target": 62.37,
-      "allocation_pct": 0
-    },
-    {
-      "ticker": "GLD",
-      "as_of": "2026-06-18",
+      "ticker": "TLT",
+      "as_of": "2026-07-16",
       "tier": "BENCH",
       "score": 32,
       "raw_score": 32,
       "factors": {
-        "technical": 6,
+        "technical": 9,
         "catalyst": 6,
         "relative_strength": 0,
         "smart_money": 7,
         "macro": 7,
-        "sentiment": 6
+        "sentiment": 3
       },
       "flags": [],
       "notes": {
         "technical": [
-          "MIXED_TREND"
+          "MIXED_TREND",
+          "NEAR_20MA"
         ],
         "catalyst": [
           "SECTOR_BASE_etf_macro"
@@ -1781,14 +2088,20 @@
         "sentiment": []
       },
       "regime": "BULL",
-      "price": 387.1199951171875,
+      "price": 84.20999908447266,
       "sector": "etf_macro",
-      "change_pct": -0.38,
-      "entry_low": 385.18,
-      "entry_high": 389.06,
-      "stop": 356.15,
-      "target": 449.06,
-      "allocation_pct": 0
+      "change_pct": -0.04,
+      "entry_low": 83.79,
+      "entry_high": 84.63,
+      "stop": 77.47,
+      "target": 97.68,
+      "allocation_pct": 0,
+      "breakout": {
+        "trigger": 87.47,
+        "pct_to_trigger": 3.87,
+        "vol_ratio": 0.84,
+        "confirmed": false
+      }
     }
   ]
 }

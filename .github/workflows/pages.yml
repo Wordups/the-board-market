@@ -45,6 +45,7 @@ jobs:
           cp index.html _site/index.html
           cp -R assets _site/assets
           cp data/board_today.json _site/data/board_today.json
+          cp data/charts_today.json _site/data/charts_today.json
           printf 'window.BOARD_PUBLIC_STATIC = true;\n' > _site/assets/js/runtime-config.js
           touch _site/.nojekyll
 

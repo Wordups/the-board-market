@@ -279,7 +279,7 @@ function renderRows() {
   $("#board-rows").innerHTML = rows.length ? rows.map(row => `
     <tr data-ticker="${clean(row.ticker)}" tabindex="0" class="${state.selected === row.ticker ? "selected" : ""}" aria-label="Open ${clean(row.ticker)} setup details">
       <td><div class="ticker-cell"><span class="ticker-badge">${clean(row.ticker.slice(0, 2))}</span><span><strong>${clean(row.ticker)}</strong><small>${clean(slug(row.sector || "unclassified"))}</small></span></div></td>
-      <td>${tierMarkup(row.tier)}</td>
+      <td>${tierMarkup(row.tier)}${row.breakout?.confirmed ? '<span class="brk-badge" title="Closed above its 20-day high on elevated volume">BRK</span>' : (row.breakout && row.breakout.pct_to_trigger !== null && row.breakout.pct_to_trigger >= 0 && row.breakout.pct_to_trigger <= 2 ? '<span class="brk-badge near" title="Within 2% of its 20-day-high breakout trigger">near</span>' : "")}</td>
       <td class="number"><span class="entry-zone">${money(row.price)}</span><br><small class="${row.change_pct >= 0 ? "gain" : "loss"}">${row.change_pct >= 0 ? "+" : ""}${row.change_pct.toFixed(2)}%</small></td>
       <td><span class="entry-zone">${money(row.entry_low)}–${money(row.entry_high)}</span></td>
       <td class="number loss">${money(row.stop)}</td>
@@ -316,6 +316,7 @@ function renderDetail(setup) {
     <div class="detail-head"><div><span class="eyebrow">${clean(slug(setup.sector || "setup"))}</span><h3>${clean(setup.ticker)}</h3><div style="margin-top:7px">${tierMarkup(setup.tier)}</div></div><div class="score-orbit">${setup.score.toFixed(0)}</div></div>
     <div class="detail-price"><div><span class="eyebrow">Last close</span><strong>${money(setup.price)}</strong></div><div><span class="eyebrow">Session</span><strong class="${setup.change_pct >= 0 ? "gain" : "loss"}">${setup.change_pct >= 0 ? "+" : ""}${setup.change_pct.toFixed(2)}%</strong></div></div>
     <div class="plan-box"><div><span class="eyebrow">Ref. entry</span><strong>${money(setup.price)}</strong></div><div><span class="eyebrow">Stop</span><strong class="loss">${money(setup.stop)}</strong></div><div><span class="eyebrow">2R target</span><strong class="gain">${money(setup.target)}</strong></div></div>
+    <div id="setup-chart-box" class="chart-box"></div>
     <div class="factor-list">${factorRows}</div>
     <div class="allocation-box">
       <div class="allocation-row"><span class="eyebrow">Model allocation</span><strong>${qualified ? compactMoney(allocation) : "$0"}</strong></div>
@@ -341,6 +342,7 @@ function renderDetail(setup) {
   });
   $("#save-button").addEventListener("click", () => toggleSaved(setup.ticker));
   if (qualified) $("#plan-button").addEventListener("click", () => toggleSaved(setup.ticker, true));
+  window.renderSetupChart?.(setup);
 }
 
 function toggleSaved(ticker, forceAdd = false) {
