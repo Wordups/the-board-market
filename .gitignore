@@ -19,3 +19,4 @@ _smoke_*.py
 *.log
 .vscode/
 .idea/
+automation/cap.txt
